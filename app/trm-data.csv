@@ -1,0 +1,40 @@
+﻿TRM Score Interval,"Patients
+below/
+within/
+above TRM
+Score
+Interval
+(%)","TRM
+Probability
+if below
+TRM
+Score
+Interval
+(%)","TRM Probability if within
+TRM Score Interval (%)","TRM
+Probability
+if above
+TRM
+Score
+Interval
+(%)","Patients below TRM
+Score Interval (%)","TRM
+Probability
+if below
+TRM Score
+Interval (%)","Patients above TRM
+Score Interval (%)","TRM
+Probability
+if above
+TRM
+Score
+Interval
+(%)"
+Patient Category,All patients,All patients,All patients,All patients,Patients >60 years of age,Patients >60 years of age,Patients <=60 years of age,Patients <=60 years of age
+0 - 1.9,0/20/80,,1,12,,,67,10
+1.91 - 3.9,20/20/60,1,2,16,8,0,39,15
+3.91 - 6.9,40/20/40,1,7,20,20,1,21,18
+6.91 - 9.2,60/10/30,3,7,24,42,2,14,26
+9.21 - 13.1,70/10/20,4,12,31,55,4,9,35
+13.11 - 22.8,80/10/10,5,20,41,70,6,5,53
+22.81 - 100,90/10/0,6,41,,85,9,,
