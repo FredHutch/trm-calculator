@@ -51,12 +51,12 @@ ui <- dashboardPage(
             checkboxInput("secondaryAML", "Secondary AML?", value = FALSE)
           ),
           box(
-            numericInput("wbc", "WBC", min = 0, value=NULL),
-            numericInput("blast", "% Blast in Peripheral Blood", min = 0, max = 100, value=NULL),
-            numericInput("creatinine", "Creatinine", min = 0, value=NULL),
+            numericInput("wbc", "WBC", min = 0, value = NULL),
+            numericInput("blast", "% Blast in Peripheral Blood", min = 0, max = 100, value = NULL),
+            numericInput("creatinine", "Creatinine", min = 0, value = NULL),
             actionButton(inputId = "calculateNow", label = "Calculate"),
-            actionButton(inputId = "reset", label = "Reset Button doesn't work yet"),
-            textOutput(outputId = "trmScore")
+            textOutput(outputId = "trmScore"),
+            actionButton(inputId = "reset", label = "Reset")
           )
         ),
         
@@ -125,6 +125,18 @@ server <- function(input, output, session) {
       calculation()
     )
   })
+  
+  observeEvent(input$reset, {
+    updateSelectInput(session,"performance", selected = 0)
+    updateNumericInput(session, "platelets", value = NA)
+    updateNumericInput(session, "albumin", value = NA)
+    updateNumericInput(session, "age", value = NA)
+    updateCheckboxInput(session, "secondaryAML", value = FALSE)
+    updateNumericInput(session, "wbc", value = NA)
+    updateNumericInput(session, "blast", value = NA)
+    updateNumericInput(session, "creatinine", value = NA)
+    output$trmScore <- renderText({""})
+  })
 }
 
 
@@ -142,4 +154,3 @@ shinyApp(
   server, 
   options = options
 )
-
