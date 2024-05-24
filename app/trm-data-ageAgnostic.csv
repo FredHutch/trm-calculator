@@ -1,0 +1,8 @@
+"TRM Score Interval","Percent of Patients below TRM Score Interval (%)","TRM Probability if below TRM Score Interval (%)","Percent of Patients within TRM Score Interval (%)","TRM Probability if within TRM Score Interval (%)","Percent of Patients above TRM Score Interval (%)","TRM Probability if above TRM Score Interval (%)"
+"0 - 1.9","0","Not Applicable","20","1","80","12"
+"1.91 - 3.9","20","1","20","2","60","16"
+"3.91 - 6.9","40","1","20","7","40","20"
+"6.91 - 9.2","60","3","10","7","30","24"
+"9.21 - 13.1","70","4","10","12","20","31"
+"13.11 - 22.8","80","5","10","20","10","41"
+"22.81 - 100","90","6","10","41","0","Not Applicable"
