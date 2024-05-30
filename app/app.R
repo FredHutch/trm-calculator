@@ -4,12 +4,33 @@ library(shiny)
 library(shinythemes)
 library(shinydashboard)
 library(shinyvalidate)
+library(DT)
+library(dplyr)
 
-# Read in TRM table that summarizes relationship btwn TRM score and probability
+# Read in TRM table for simplified model without age
 trmData <- read.csv(
-  "trm-data.csv", 
-  header = TRUE
+  "trm-data-ageAgnostic.csv", 
+  header = TRUE,
+  check.names = FALSE
 )
+
+# Read in TRM table for simplified model with age for 60+
+trmDataSixtyPlus <- read.csv(
+  "trm-data-sixtyplus.csv", 
+  header = TRUE,
+  check.names = FALSE
+)
+
+# Read in TRM table for simplified model with age for 60 and under
+trmDataUnderSixty <- read.csv(
+  "trm-data-undersixty.csv", 
+  header = TRUE,
+  check.names = FALSE
+)
+
+# Define the possible trm Intervals
+trmIntervals_list <- trmData$`TRM Score Interval`
+
 
 # Set up User Interface
 ui <- dashboardPage(
@@ -40,7 +61,6 @@ ui <- dashboardPage(
   
   dashboardBody(
     tabItems(
-      
       tabItem(
         tabName = "trm",
         fluidRow(
@@ -62,10 +82,9 @@ ui <- dashboardPage(
         ),
         
         fluidRow(
-          column(
-            12, 
-            tableOutput(outputId = "trmTable")
-          )
+          column(12, DTOutput(outputId = "trmTable")),
+          column(12, DTOutput(outputId = "trmTableSixtyPlus")),
+          column(12, DTOutput(outputId = "trmTableUnderSixty"))
         ),
         
         fluidRow(
@@ -91,8 +110,7 @@ ui <- dashboardPage(
 )
 
 # Define server logic required 
-server <- function(input, output, session) {
-  
+server <- function(input, output, session) {  
   iv <- InputValidator$new()
   iv$add_rule("age", sv_required())
   iv$add_rule("age", function(value) {
@@ -131,6 +149,11 @@ server <- function(input, output, session) {
     }
   })
   iv$enable()
+
+  vals <- reactiveValues(
+    row_priority = trmIntervals_list,
+    row_color = rep('white', 7)
+  )
   
   calculation <- eventReactive(
     input$calculateNow, 
@@ -160,16 +183,103 @@ server <- function(input, output, session) {
     ignoreNULL = TRUE
   )
   
-  output$trmTable <- renderTable(
-    trmData
-  )
   
   output$trmScore <- renderText({
-    paste0(
-      "The TRM Score is: ", calculation()
-    )
+    paste0("The TRM Score is: ", calculation())
   })
   
+  
+  # Based on calculated TRM score, figure out which row to highlight in table
+  highlightedRow <- eventReactive(input$calculateNow, {
+    chosenTrmInterval = "0 - 1.9"
+    
+    # Iterate over options in the TRM intervals and match the score
+    for(elem in trmIntervals_list){
+      minValue = as.numeric(strsplit(elem, " - ")[[1]][1])
+      maxValue = as.numeric(strsplit(elem, " - ")[[1]][2])
+      # If we find the right row, we can break out of our loop
+      if(calculation() >= minValue && calculation() <= maxValue){
+        chosenTrmInterval = elem
+        break
+      }
+    }
+    
+    # Match the identified row with the right highlight color
+    vals$row_priority <- c(
+      chosenTrmInterval, 
+      vals$row_priority[vals$row_priority != chosenTrmInterval]
+    )
+    vals$row_color <- c(
+      'lightgreen', #TODO: maybe change colors to Hutch themes?
+      'white', 'white', 'white', 'white', 'white', 'white'
+    )
+    
+    vals
+  })
+  
+  # Show the data table for the simplified model
+  output$trmTable <- renderDT(
+    datatable(
+      trmData,
+      caption = "Simplified Model without Age"
+    ) %>%
+      formatStyle(
+        "TRM Score Interval",
+        target = "row",
+        backgroundColor = styleEqual(
+          highlightedRow()$row_priority,
+          highlightedRow()$row_color,
+          default = 'white'
+        )
+      )
+  )
+  
+  # Show the data table for the simplified model + relevant age
+  observeEvent(input$calculateNow, {
+    # If age > 60, show only the older age table
+    if(input$age > 60){
+      output$trmTableSixtyPlus <- renderDT(
+        datatable(
+          trmDataSixtyPlus,
+          caption = "Simplified Model with Age (Over 60)"
+        ) %>%
+          formatStyle(
+            "TRM Score Interval",
+            target = "row",
+            backgroundColor = styleEqual(
+              highlightedRow()$row_priority,
+              highlightedRow()$row_color,
+              default = 'white'
+            )
+          )
+      )
+      
+      output$trmTableUnderSixty <- renderDT({})
+    }
+    
+    # If age <= 60, show only the younger age table
+    if(input$age <= 60){
+      output$trmTableUnderSixty <- renderDT(
+        datatable(
+          trmDataUnderSixty,
+          caption = "Simplifed Model with Age (60 and under)"
+        ) %>%
+          formatStyle(
+            "TRM Score Interval",
+            target = "row",
+            backgroundColor = styleEqual(
+              highlightedRow()$row_priority,
+              highlightedRow()$row_color,
+              default = 'white'
+            )
+          )
+      )
+      
+      output$trmTableSixtyPlus <- renderDT({})
+    }
+  })
+  
+  # Hitting the reset button will clear all values
   observeEvent(input$reset, {
     updateSelectInput(session,"performance", selected = 0)
     updateNumericInput(session, "platelets", value = NA)
@@ -180,6 +290,9 @@ server <- function(input, output, session) {
     updateNumericInput(session, "blast", value = NA)
     updateNumericInput(session, "creatinine", value = NA)
     output$trmScore <- renderText({""})
+    output$trmTableSixtyPlus <- renderDT({})
+    output$trmTableUnderSixty <- renderDT({})
+    output$trmTable <- renderDT({})
   })
 }
 
