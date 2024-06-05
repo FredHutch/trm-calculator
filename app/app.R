@@ -19,9 +19,9 @@ ui <- dashboardPage(
     title = tags$a(
       href='https://hutchdatascience.org',
       tags$img(
-        src='trmHeader.png',
-        height='30px',
-        width='200px'
+        src='fhLogo.png',
+        height='35px',
+        width='150px'
       )
     )
   ),
@@ -157,13 +157,16 @@ server <- function(input, output, session) {
   })
   
   daslWebsite <- a("Data Science Lab (DaSL)", href="https://hutchdatascience.org")
-  daslEmail <- a("data@fredhutch.org", href="mailto:data@fredhutch.org")
+  daslTA <- a("Translational Analytics", href="https://hutchdatascience.org/tr-analytics/")
+  daslEmail <- a("analytics@fredhutch.org", href="mailto:analytics@fredhutch.org")
   
   output$contactInfo <- renderUI({
     tagList(
       "This application was developed by the Fred Hutch ",
       daslWebsite,
-      ". For questions or feedback regarding this application, email DaSL at ",
+      ". For questions or feedback regarding this application, email DaSL ",
+      daslTA,
+      " at ",
       daslEmail,
       "."
     )
