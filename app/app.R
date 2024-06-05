@@ -3,6 +3,7 @@
 library(shiny)
 library(shinythemes)
 library(shinydashboard)
+library(shinyvalidate)
 library(DT)
 library(dplyr)
 
@@ -64,16 +65,16 @@ ui <- dashboardPage(
         tabName = "trm",
         fluidRow(
           box(
-            selectInput("performance", "Performance Status", choices = c("0", "1", "2", "3", "4")),
-            numericInput("platelets", "Platelet Count", min = 0, value = NULL),
-            numericInput("albumin", "Albumin", min = 0, value = NULL),
-            numericInput("age", "Age", min = 0, max = 125, value = NULL),
-            checkboxInput("secondaryAML", "Secondary AML?", value = FALSE)
+            selectInput("performance", "Performance Status (0 - 4)", choices = c("0", "1", "2", "3", "4")),
+            numericInput("platelets", "Platelet Count (x10^3/uL)", min = 0, value = NULL),
+            numericInput("albumin", "Albumin (g/dL)", min = 0, value = NULL),
+            numericInput("age", "Age (Years)", min = 0, max = 125, value = NULL),
+            checkboxInput("secondaryAML", "Secondary AML? (Check if yes)", value = FALSE)
           ),
           box(
-            numericInput("wbc", "WBC", min = 0, value = NULL),
-            numericInput("blast", "% Blast in Peripheral Blood", min = 0, max = 100, value = NULL),
-            numericInput("creatinine", "Creatinine", min = 0, value = NULL),
+            numericInput("wbc", "White Blood Cell Count (x10^3/uL)", min = 0, value = NULL),
+            numericInput("blast", "Blast Percentage in Peripheral Blood (%)", min = 0, max = 100, value = NULL),
+            numericInput("creatinine", "Creatinine (mg/dL)", min = 0, value = NULL),
             actionButton(inputId = "calculateNow", label = "Calculate"),
             textOutput(outputId = "trmScore"),
             actionButton(inputId = "reset", label = "Reset")
@@ -109,7 +110,46 @@ ui <- dashboardPage(
 )
 
 # Define server logic required 
-server <- function(input, output, session) {
+server <- function(input, output, session) {  
+  iv <- InputValidator$new()
+  iv$add_rule("age", sv_required())
+  iv$add_rule("age", function(value) {
+    if (value < 0) {
+      "Age must be greater than 0"
+    }
+  })
+  iv$add_rule("platelets", sv_required())
+  iv$add_rule("platelets", function(value) {
+    if (value < 0) {
+      "Platelet count must be greater than 0"
+    }
+  })
+  iv$add_rule("albumin", sv_required())
+  iv$add_rule("albumin", function(value) {
+    if (value < 0) {
+      "Albumin must be greater than 0"
+    }
+  })
+  iv$add_rule("wbc", sv_required())
+  iv$add_rule("wbc", function(value) {
+    if (value < 0) {
+      "WBC must be greater than 0"
+    }
+  })
+  iv$add_rule("blast", sv_required())
+  iv$add_rule("blast", function(value) {
+    if (value < 0 || value > 100) {
+      "Blast Percentage must be between 0 and 100"
+    }
+  })
+  iv$add_rule("creatinine", sv_required())
+  iv$add_rule("creatinine", function(value) {
+    if (value < 0) {
+      "Creatinine must be greater than 0"
+    }
+  })
+  iv$enable()
+
   vals <- reactiveValues(
     row_priority = trmIntervals_list,
     row_color = rep('white', 7)
@@ -118,6 +158,8 @@ server <- function(input, output, session) {
   calculation <- eventReactive(
     input$calculateNow, 
     {
+      req(iv$is_valid())
+      
       PS = as.numeric(input$performance)
       age = input$age
       platelets = input$platelets
@@ -130,10 +172,12 @@ server <- function(input, output, session) {
       x = -4.08 + 0.89*PS + 0.03*age - 0.008*platelets - 0.48*albumin +
         0.47*hasSecondaryAML  + 0.007*WBC - 0.007*PBBP + 0.34*creatinine
       
-      round(
+      output = round(
         100/(1 + exp(-x)),
         digits = 4
       )
+      
+      output
     },
     ignoreInit = TRUE,
     ignoreNULL = TRUE
