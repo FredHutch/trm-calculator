@@ -7,6 +7,7 @@ library(shinyvalidate)
 library(DT)
 library(dplyr)
 library(gt)
+library(gtExtras)
 
 # Read in TRM table for simplified model without age
 trmData <- read.csv(
@@ -208,55 +209,66 @@ server <- function(input, output, session) {
   
   # Based on calculated TRM score, figure out which row to highlight in table
   highlightedRow <- eventReactive(input$calculateNow, {
-    chosenTrmInterval = "0 - 1.9"
+    rowIndex = 0
     
     # Iterate over options in the TRM intervals and match the score
     for(elem in trmIntervals_list){
+      rowIndex = rowIndex + 1
       minValue = as.numeric(strsplit(elem, " - ")[[1]][1])
       maxValue = as.numeric(strsplit(elem, " - ")[[1]][2])
       # If we find the right row, we can break out of our loop
       if(calculation() >= minValue && calculation() <= maxValue){
-        chosenTrmInterval = elem
         break
       }
     }
     
-    # Match the identified row with the right highlight color
-    vals$row_priority <- c(
-      chosenTrmInterval, 
-      vals$row_priority[vals$row_priority != chosenTrmInterval]
-    )
-    vals$row_color <- c(
-      'lightgreen', #TODO: maybe change colors to Hutch themes?
-      'white', 'white', 'white', 'white', 'white', 'white'
-    )
-    
-    vals
+    rowIndex
   })
 
   # Show the data table for the simplified model + relevant age
   observeEvent(input$calculateNow, {
     # Show the data table for the simplified model
-    # "Simplified Model without Age"
     output$trmTable <- render_gt(
-      trmData
+      expr = gt(trmData) |>
+        gt_highlight_rows(
+          rows = highlightedRow(),
+          fill = "lightgreen",
+          bold_target_only = TRUE,
+          target_col = `TRM Score Interval`
+        ) |> tab_header(
+          title = md("Simplified Model without Age")
+        ) 
     )
     
     # If age > 60, show only the older age table
-    # "Simplified Model with Age (Over 60)"
     if(input$age > 60){
       output$trmTableSixtyPlus <- render_gt(
-          trmDataSixtyPlus
+        expr = gt(trmDataSixtyPlus) |>
+          gt_highlight_rows(
+            rows = highlightedRow(),
+            fill = "lightgreen",
+            bold_target_only = TRUE,
+            target_col = `TRM Score Interval`
+          ) |> tab_header(
+            title = md("Simplified Model with Age (Over 60)")
+          ) 
         )
       
       output$trmTableUnderSixty <- render_gt({})
     }
     
     # If age <= 60, show only the younger age table
-    # caption = "Simplifed Model with Age (60 and under)"
     if(input$age <= 60){
       output$trmTableUnderSixty <- render_gt(
-          trmDataUnderSixty
+        expr = gt(trmDataUnderSixty) |>
+          gt_highlight_rows(
+            rows = highlightedRow(),
+            fill = "lightgreen",
+            bold_target_only = TRUE,
+            target_col = `TRM Score Interval`
+          ) |> tab_header(
+            title = md("Simplifed Model with Age (60 and under)")
+          ) 
         )
       
       output$trmTableSixtyPlus <- render_gt({})
