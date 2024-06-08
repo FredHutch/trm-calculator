@@ -6,6 +6,7 @@ library(shinydashboard)
 library(shinyvalidate)
 library(DT)
 library(dplyr)
+library(gt)
 
 # Read in TRM table for simplified model without age
 trmData <- read.csv(
@@ -88,9 +89,9 @@ ui <- dashboardPage(
         ),
         
         fluidRow(
-          column(12, DTOutput(outputId = "trmTable")),
-          column(12, DTOutput(outputId = "trmTableSixtyPlus")),
-          column(12, DTOutput(outputId = "trmTableUnderSixty"))
+          column(12, gt_output(outputId = "trmTable")),
+          column(12, gt_output(outputId = "trmTableSixtyPlus")),
+          column(12, gt_output(outputId = "trmTableUnderSixty"))
         ),
         
         fluidRow(
@@ -232,66 +233,33 @@ server <- function(input, output, session) {
     
     vals
   })
-  
-  # Show the data table for the simplified model
-  output$trmTable <- renderDT(
-    datatable(
-      trmData,
-      caption = "Simplified Model without Age"
-    ) %>%
-      formatStyle(
-        "TRM Score Interval",
-        target = "row",
-        backgroundColor = styleEqual(
-          highlightedRow()$row_priority,
-          highlightedRow()$row_color,
-          default = 'white'
-        )
-      )
-  )
-  
+
   # Show the data table for the simplified model + relevant age
   observeEvent(input$calculateNow, {
+    # Show the data table for the simplified model
+    # "Simplified Model without Age"
+    output$trmTable <- render_gt(
+      trmData
+    )
+    
     # If age > 60, show only the older age table
+    # "Simplified Model with Age (Over 60)"
     if(input$age > 60){
-      output$trmTableSixtyPlus <- renderDT(
-        datatable(
-          trmDataSixtyPlus,
-          caption = "Simplified Model with Age (Over 60)"
-        ) %>%
-          formatStyle(
-            "TRM Score Interval",
-            target = "row",
-            backgroundColor = styleEqual(
-              highlightedRow()$row_priority,
-              highlightedRow()$row_color,
-              default = 'white'
-            )
-          )
-      )
+      output$trmTableSixtyPlus <- render_gt(
+          trmDataSixtyPlus
+        )
       
-      output$trmTableUnderSixty <- renderDT({})
+      output$trmTableUnderSixty <- render_gt({})
     }
     
     # If age <= 60, show only the younger age table
+    # caption = "Simplifed Model with Age (60 and under)"
     if(input$age <= 60){
-      output$trmTableUnderSixty <- renderDT(
-        datatable(
-          trmDataUnderSixty,
-          caption = "Simplifed Model with Age (60 and under)"
-        ) %>%
-          formatStyle(
-            "TRM Score Interval",
-            target = "row",
-            backgroundColor = styleEqual(
-              highlightedRow()$row_priority,
-              highlightedRow()$row_color,
-              default = 'white'
-            )
-          )
-      )
+      output$trmTableUnderSixty <- render_gt(
+          trmDataUnderSixty
+        )
       
-      output$trmTableSixtyPlus <- renderDT({})
+      output$trmTableSixtyPlus <- render_gt({})
     }
   })
   
@@ -306,9 +274,9 @@ server <- function(input, output, session) {
     updateNumericInput(session, "blast", value = NA)
     updateNumericInput(session, "creatinine", value = NA)
     output$trmScore <- renderText({""})
-    output$trmTableSixtyPlus <- renderDT({})
-    output$trmTableUnderSixty <- renderDT({})
-    output$trmTable <- renderDT({})
+    output$trmTableSixtyPlus <- render_gt({})
+    output$trmTableUnderSixty <- render_gt({})
+    output$trmTable <- render_gt({})
   })
   
   daslWebsite <- a("Data Science Lab (DaSL)", href="https://hutchdatascience.org")
