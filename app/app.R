@@ -35,15 +35,13 @@ trmIntervals_list <- trmData$`TRM Score Interval`
 
 # Set up User Interface
 ui <- dashboardPage(
-  skin = "black",
-  
   dashboardHeader(
     title = tags$a(
       href='https://hutchdatascience.org',
       tags$img(
         src='fhLogo.png',
         height='35px',
-        width='150px'
+        width='155px'
       )
     )
   ),
@@ -53,39 +51,54 @@ ui <- dashboardPage(
       menuItem(
         "TRM Calculator", 
         tabName = "trm", 
-        icon = icon("calculator"), 
-        badgeLabel = "calculate", 
-        badgeColor = "red"
+        icon = icon("calculator")
       ),
       menuItem(
-        "Other Handy Tool", 
-        tabName = "futuretool", 
-        icon = icon("vial"),
-        badgeLabel = "future", 
-        badgeColor = "orange"
+        "Background", 
+        tabName = "background", 
+        icon = icon("book")
       )
     )
   ),
   
   dashboardBody(
+    includeCSS("www/hutch_theme.css"),
+    
+    tags$head(tags$style(HTML(
+      '.myClass { 
+        font-size: 20px;
+        line-height: 50px;
+        text-align: left;
+        font-family: "Arial",Helvetica,Arial,sans-serif;
+        padding: 0 15px;
+        overflow: hidden;
+        color: white;
+      }
+    '))),
+    tags$script(HTML('
+      $(document).ready(function() {
+        $("header").find("nav").append(\'<span class="myClass"> Treatment-Related Mortality (TRM) Calculator </span>\');
+      })
+     ')),
+    
     tabItems(
       tabItem(
         tabName = "trm",
         fluidRow(
           box(
-            selectInput("performance", "Performance Status (0 - 4)", choices = c("0", "1", "2", "3", "4")),
-            numericInput("platelets", "Platelet Count (x10^3/uL)", min = 0, value = NULL),
-            numericInput("albumin", "Albumin (g/dL)", min = 0, value = NULL),
+            selectInput("performance", "Performance Status (0 to 4)", choices = c("0", "1", "2", "3", "4")),
             numericInput("age", "Age (Years)", min = 0, max = 125, value = NULL),
-            checkboxInput("secondaryAML", "Secondary AML? (Check if yes)", value = FALSE)
+            numericInput("platelets", HTML(paste0("Platelet Count (x10",tags$sup("3"), '/uL)')), min = 0, value = NULL),
+            numericInput("albumin", "Albumin (g/dL)", min = 0, value = NULL),
+            checkboxInput("secondaryAML", strong("Secondary AML? (Check if yes)"), value = FALSE)
           ),
           box(
-            numericInput("wbc", "White Blood Cell Count (x10^3/uL)", min = 0, value = NULL),
+            numericInput("wbc", HTML(paste0("White Blood Cell Count (x10",tags$sup("3"), '/uL)')), min = 0, value = NULL),
             numericInput("blast", "Blast Percentage in Peripheral Blood (%)", min = 0, max = 100, value = NULL),
             numericInput("creatinine", "Creatinine (mg/dL)", min = 0, value = NULL),
-            actionButton(inputId = "calculateNow", label = "Calculate"),
-            textOutput(outputId = "trmScore"),
-            actionButton(inputId = "reset", label = "Reset")
+            actionButton(inputId = "calculateNow", label = strong("Calculate")),
+            actionButton(inputId = "reset", label = strong("Reset")),
+            htmlOutput(outputId = "trmScore")
           )
         ),
         
@@ -100,16 +113,6 @@ ui <- dashboardPage(
             12, 
             box(
               width = 12, 
-              "Publication URL: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3221524/. Prediction of Treatment-Related Mortality after Induction Therapy for Newly Diagnosed Acute Myeloid Leukemia - It is well known that the risk treatment-related mortality (TRM) varies considerably between individual patients with acute myeloid leukemia (AML). Numerous factors have been identified that are individually associated with this risk, including age and covariates that may serve as surrogates for the biological (rather than chronological) age, such as performance status, organ function parameters (e.g. bilirubin, fibrinogen, albumin, creatinine), degree of cytopenias, and disease characteristics. Using data from 3,365 adults of all ages administered intensive chemotherapy for newly diagnosed AML on SWOG trials or at M.D. Anderson Cancer Center between 1986 and 2009, we defined TRM as death within 28 days from initiation of chemotherapy based on the observation that the risk of death declined once 4 weeks had elapsed from treatment start. We then used the area under the receiver operator characteristic curve (AUC) to quantify the relative effects of individual covariates on TRM in a subset of 2,238 patients treated between 1986 and 2009 at M.D. Anderson Cancer Center. We found that multicomponent models were significantly more accurate in predicting TRM than individual covariates alone. A maximal model comprised of 17 covariates yielded an AUC of 0.83. Omission of covariates of lesser importance led to a “simplified” model that included performance status, age, platelet count, serum albumin, type of AML (secondary vs. primary), white blood cell count, percentage of blasts in the peripheral blood, and serum creatinine, yielding an AUC of 0.82."
-            )
-          )
-        ),
-        
-        fluidRow(
-          column(
-            12, 
-            box(
-              width = 12, 
               uiOutput(outputId = "contactInfo")
             )
           )
@@ -117,18 +120,18 @@ ui <- dashboardPage(
       ),
       
       tabItem(
-        tabName = "futuretool",
+        tabName = "background",
         box(
-          align = "center",
-          h3("What else would be handy to have right next to this calculator? Could we put it here?")
-        ),
+          width = 12, 
+          uiOutput(outputId = "background")
+        )
       )
     )
   )
 )
 
 # Define server logic required 
-server <- function(input, output, session) {  
+server <- function(input, output, session) {
   iv <- InputValidator$new()
   iv$add_rule("age", sv_required())
   iv$add_rule("age", function(value) {
@@ -203,7 +206,7 @@ server <- function(input, output, session) {
   
   
   output$trmScore <- renderText({
-    paste0("The TRM Score is: ", calculation())
+    paste("The TRM Score is: ", "<b>",calculation(),"</b>")
   })
   
   
@@ -227,17 +230,19 @@ server <- function(input, output, session) {
 
   # Show the data table for the simplified model + relevant age
   observeEvent(input$calculateNow, {
+    req(iv$is_valid())
+
     # Show the data table for the simplified model
     output$trmTable <- render_gt(
       expr = gt(trmData) |>
         gt_highlight_rows(
           rows = highlightedRow(),
-          fill = "lightgreen",
+          fill = "FFB500",
           bold_target_only = TRUE,
           target_col = `TRM Score Interval`
         ) |> tab_header(
           title = md("Simplified Model without Age")
-        ) 
+        )
     )
     
     # If age > 60, show only the older age table
@@ -246,7 +251,7 @@ server <- function(input, output, session) {
         expr = gt(trmDataSixtyPlus) |>
           gt_highlight_rows(
             rows = highlightedRow(),
-            fill = "lightgreen",
+            fill = "FFB500",
             bold_target_only = TRUE,
             target_col = `TRM Score Interval`
           ) |> tab_header(
@@ -263,7 +268,7 @@ server <- function(input, output, session) {
         expr = gt(trmDataUnderSixty) |>
           gt_highlight_rows(
             rows = highlightedRow(),
-            fill = "lightgreen",
+            fill = "FFB500",
             bold_target_only = TRUE,
             target_col = `TRM Score Interval`
           ) |> tab_header(
@@ -296,16 +301,51 @@ server <- function(input, output, session) {
   daslEmail <- a("analytics@fredhutch.org", href="mailto:analytics@fredhutch.org")
   
   output$contactInfo <- renderUI({
-    tagList(
-      "This application was developed by the Fred Hutch ",
-      daslWebsite,
-      ". For questions or feedback regarding this application, email DaSL ",
-      daslTA,
-      " at ",
-      daslEmail,
-      "."
+    HTML(
+      paste(
+        "This application was developed by the Fred Hutch ",
+        daslWebsite,
+        ". For questions or feedback regarding this application, email DaSL ",
+        daslTA,
+        " at ",
+        daslEmail,
+        "."
+      )
     )
   })
+
+  trmManuscript <- a("Prediction of Treatment-Related Mortality after Induction Therapy for Newly Diagnosed Acute Myeloid Leukemia",
+                 href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3221524/")
+
+  output$background <- renderText({
+    HTML(
+      paste(
+        "<b>",
+        trmManuscript,
+        "</b>",
+        "<br>",
+        "<br>",
+        "<i>",
+        "Roland B. Walter, Megan Othus, Gautam Borthakur, Farhad Ravandi, Jorge E. Cortes, Sherry A. Pierce, Frederick R. Appelbaum, Hagop A. Kantarjian, and Elihu H. Estey",
+        "</i>",
+        "<br>",
+        "<br>",
+        "It is well known that the risk treatment-related mortality (TRM) varies considerably between individual patients with acute myeloid leukemia (AML). Numerous factors have been identified that are individually associated with this risk, including age and covariates that may serve as surrogates for the biological (rather than chronological) age, such as performance status, organ function parameters (e.g. bilirubin, fibrinogen, albumin, creatinine), degree of cytopenias, and disease characteristics. Using data from 3,365 adults of all ages administered intensive chemotherapy for newly diagnosed AML on SWOG trials or at M.D. Anderson Cancer Center between 1986 and 2009, we defined TRM as death within 28 days from initiation of chemotherapy based on the observation that the risk of death declined once 4 weeks had elapsed from treatment start. We then used the area under the receiver operator characteristic curve (AUC) to quantify the relative effects of individual covariates on TRM in a subset of 2,238 patients treated between 1986 and 2009 at M.D. Anderson Cancer Center. We found that multicomponent models were significantly more accurate in predicting TRM than individual covariates alone. A maximal model comprised of 17 covariates yielded an AUC of 0.83. Omission of covariates of lesser importance led to a “simplified” model that included performance status, age, platelet count, serum albumin, type of AML (secondary vs. primary), white blood cell count, percentage of blasts in the peripheral blood, and serum creatinine, yielding an AUC of 0.82.",
+        "<br>",
+        "<br>",
+        "<b>",
+        "Reference:",
+        "</b>",
+        "<br>",
+        "1. Walter RB, Othus M, Borthakur G, Ravandi F, Cortes JE, Pierce SA, Appelbaum FR, Kantarjian HM, Estey EH. Prediction of early death following induction therapy for newly diagnosed acute myeloid leukemia with pretreatment risk scores: a novel paradigm for treatment assignment.",
+        "<i>",
+        "J Clin Oncol.",
+        "</i>",
+        "2011;29(33):4417-4424. PMID: 21969499."
+      )
+    )
+  })
+  
 }
 
 
