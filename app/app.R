@@ -257,6 +257,22 @@ server <- function(input, output, session) {
   observeEvent(input$calculateNow, {
     req(iv$is_valid())
     
+    output$trmTable <- renderDT(
+      datatable(
+        trmData,
+        caption = "Simplified Model without Age"
+      ) %>%
+        formatStyle(
+          "TRM Score Interval",
+          target = "row",
+          backgroundColor = styleEqual(
+            highlightedRow()$row_priority,
+            highlightedRow()$row_color,
+            default = 'white'
+          )
+        )
+    )
+    
     # If age > 60, show only the older age table
     if(input$age > 60){
       output$trmTableSixtyPlus <- renderDT(
