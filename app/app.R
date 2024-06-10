@@ -39,7 +39,7 @@ ui <- dashboardPage(
       tags$img(
         src='fhLogo.png',
         height='35px',
-        width='160px'
+        width='155px'
       )
     )
   ),
