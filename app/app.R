@@ -49,22 +49,35 @@ ui <- dashboardPage(
       menuItem(
         "TRM Calculator", 
         tabName = "trm", 
-        icon = icon("calculator"), 
-        badgeLabel = "calculate",
-        badgeColor = "orange"
+        icon = icon("calculator")
       ),
       menuItem(
         "Background", 
         tabName = "background", 
-        icon = icon("book"),
-        badgeLabel = "context", 
-        badgeColor = "fuchsia"
+        icon = icon("book")
       )
     )
   ),
   
   dashboardBody(
     includeCSS("www/hutch_theme.css"),
+    
+    tags$head(tags$style(HTML(
+      '.myClass { 
+        font-size: 20px;
+        line-height: 50px;
+        text-align: left;
+        font-family: "Arial",Helvetica,Arial,sans-serif;
+        padding: 0 15px;
+        overflow: hidden;
+        color: white;
+      }
+    '))),
+    tags$script(HTML('
+      $(document).ready(function() {
+        $("header").find("nav").append(\'<span class="myClass"> Treatment-Related Mortality (TRM) Calculator </span>\');
+      })
+     ')),
     
     tabItems(
       tabItem(
@@ -83,7 +96,7 @@ ui <- dashboardPage(
             numericInput("creatinine", "Creatinine (mg/dL)", min = 0, value = NULL),
             actionButton(inputId = "calculateNow", label = strong("Calculate")),
             actionButton(inputId = "reset", label = strong("Reset")),
-            textOutput(outputId = "trmScore")
+            htmlOutput(outputId = "trmScore")
           )
         ),
         
@@ -191,7 +204,7 @@ server <- function(input, output, session) {
   
   
   output$trmScore <- renderText({
-    paste0("The TRM Score is: ", calculation())
+    paste("The TRM Score is: ", "<b>",calculation(),"</b>")
   })
   
   
