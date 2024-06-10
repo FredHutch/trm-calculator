@@ -39,7 +39,7 @@ ui <- dashboardPage(
       tags$img(
         src='fhLogo.png',
         height='35px',
-        width='150px'
+        width='160px'
       )
     )
   ),
@@ -50,13 +50,13 @@ ui <- dashboardPage(
         "TRM Calculator", 
         tabName = "trm", 
         icon = icon("calculator"), 
-        badgeLabel = "calculate", 
+        badgeLabel = "calculate",
         badgeColor = "orange"
       ),
       menuItem(
         "Background", 
         tabName = "background", 
-        icon = icon("vial"),
+        icon = icon("book"),
         badgeLabel = "context", 
         badgeColor = "fuchsia"
       )
@@ -71,19 +71,19 @@ ui <- dashboardPage(
         tabName = "trm",
         fluidRow(
           box(
-            selectInput("performance", "Performance Status (0 - 4)", choices = c("0", "1", "2", "3", "4")),
-            numericInput("platelets", "Platelet Count (x10^3/uL)", min = 0, value = NULL),
-            numericInput("albumin", "Albumin (g/dL)", min = 0, value = NULL),
+            selectInput("performance", "Performance Status (0 to 4)", choices = c("0", "1", "2", "3", "4")),
             numericInput("age", "Age (Years)", min = 0, max = 125, value = NULL),
-            checkboxInput("secondaryAML", "Secondary AML? (Check if yes)", value = FALSE)
+            numericInput("platelets", HTML(paste0("Platelet Count (x10",tags$sup("3"), '/uL)')), min = 0, value = NULL),
+            numericInput("albumin", "Albumin (g/dL)", min = 0, value = NULL),
+            checkboxInput("secondaryAML", strong("Secondary AML? (Check if yes)"), value = FALSE)
           ),
           box(
-            numericInput("wbc", "White Blood Cell Count (x10^3/uL)", min = 0, value = NULL),
+            numericInput("wbc", HTML(paste0("White Blood Cell Count (x10",tags$sup("3"), '/uL)')), min = 0, value = NULL),
             numericInput("blast", "Blast Percentage in Peripheral Blood (%)", min = 0, max = 100, value = NULL),
             numericInput("creatinine", "Creatinine (mg/dL)", min = 0, value = NULL),
-            actionButton(inputId = "calculateNow", label = "Calculate"),
-            textOutput(outputId = "trmScore"),
-            actionButton(inputId = "reset", label = "Reset")
+            actionButton(inputId = "calculateNow", label = strong("Calculate")),
+            actionButton(inputId = "reset", label = strong("Reset")),
+            textOutput(outputId = "trmScore")
           )
         ),
         
@@ -242,6 +242,8 @@ server <- function(input, output, session) {
   
   # Show the data table for the simplified model + relevant age
   observeEvent(input$calculateNow, {
+    req(iv$is_valid())
+    
     # If age > 60, show only the older age table
     if(input$age > 60){
       output$trmTableSixtyPlus <- renderDT(
