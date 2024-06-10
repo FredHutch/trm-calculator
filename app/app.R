@@ -237,7 +237,7 @@ server <- function(input, output, session) {
       expr = gt(trmData) |>
         gt_highlight_rows(
           rows = highlightedRow(),
-          fill = "FFB500",
+          fill = "gold",
           bold_target_only = TRUE,
           target_col = `TRM Score Interval`
         ) |> tab_header(
@@ -251,7 +251,7 @@ server <- function(input, output, session) {
         expr = gt(trmDataSixtyPlus) |>
           gt_highlight_rows(
             rows = highlightedRow(),
-            fill = "FFB500",
+            fill = "gold",
             bold_target_only = TRUE,
             target_col = `TRM Score Interval`
           ) |> tab_header(
@@ -268,7 +268,7 @@ server <- function(input, output, session) {
         expr = gt(trmDataUnderSixty) |>
           gt_highlight_rows(
             rows = highlightedRow(),
-            fill = "FFB500",
+            fill = "gold",
             bold_target_only = TRUE,
             target_col = `TRM Score Interval`
           ) |> tab_header(
