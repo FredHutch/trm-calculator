@@ -121,7 +121,7 @@ ui <- dashboardPage(
         tabName = "background",
         box(
           width = 12, 
-          "Publication URL: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3221524/. Prediction of Treatment-Related Mortality after Induction Therapy for Newly Diagnosed Acute Myeloid Leukemia - It is well known that the risk treatment-related mortality (TRM) varies considerably between individual patients with acute myeloid leukemia (AML). Numerous factors have been identified that are individually associated with this risk, including age and covariates that may serve as surrogates for the biological (rather than chronological) age, such as performance status, organ function parameters (e.g. bilirubin, fibrinogen, albumin, creatinine), degree of cytopenias, and disease characteristics. Using data from 3,365 adults of all ages administered intensive chemotherapy for newly diagnosed AML on SWOG trials or at M.D. Anderson Cancer Center between 1986 and 2009, we defined TRM as death within 28 days from initiation of chemotherapy based on the observation that the risk of death declined once 4 weeks had elapsed from treatment start. We then used the area under the receiver operator characteristic curve (AUC) to quantify the relative effects of individual covariates on TRM in a subset of 2,238 patients treated between 1986 and 2009 at M.D. Anderson Cancer Center. We found that multicomponent models were significantly more accurate in predicting TRM than individual covariates alone. A maximal model comprised of 17 covariates yielded an AUC of 0.83. Omission of covariates of lesser importance led to a “simplified” model that included performance status, age, platelet count, serum albumin, type of AML (secondary vs. primary), white blood cell count, percentage of blasts in the peripheral blood, and serum creatinine, yielding an AUC of 0.82."
+          uiOutput(outputId = "background")
         )
       )
     )
@@ -229,7 +229,7 @@ server <- function(input, output, session) {
       vals$row_priority[vals$row_priority != chosenTrmInterval]
     )
     vals$row_color <- c(
-      '#FFB500', #TODO: maybe change colors to Hutch themes?
+      '#FFB500',
       'white', 'white', 'white', 'white', 'white', 'white'
     )
     
@@ -337,16 +337,51 @@ server <- function(input, output, session) {
   daslEmail <- a("analytics@fredhutch.org", href="mailto:analytics@fredhutch.org")
   
   output$contactInfo <- renderUI({
-    tagList(
-      "This application was developed by the Fred Hutch ",
-      daslWebsite,
-      ". For questions or feedback regarding this application, email DaSL ",
-      daslTA,
-      " at ",
-      daslEmail,
-      "."
+    HTML(
+      paste(
+        "This application was developed by the Fred Hutch ",
+        daslWebsite,
+        ". For questions or feedback regarding this application, email DaSL ",
+        daslTA,
+        " at ",
+        daslEmail,
+        "."
+      )
     )
   })
+
+  trmManuscript <- a("Prediction of Treatment-Related Mortality after Induction Therapy for Newly Diagnosed Acute Myeloid Leukemia",
+                 href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3221524/")
+
+  output$background <- renderText({
+    HTML(
+      paste(
+        "<b>",
+        trmManuscript,
+        "</b>",
+        "<br>",
+        "<br>",
+        "<i>",
+        "Roland B. Walter, Megan Othus, Gautam Borthakur, Farhad Ravandi, Jorge E. Cortes, Sherry A. Pierce, Frederick R. Appelbaum, Hagop A. Kantarjian, and Elihu H. Estey",
+        "</i>",
+        "<br>",
+        "<br>",
+        "It is well known that the risk treatment-related mortality (TRM) varies considerably between individual patients with acute myeloid leukemia (AML). Numerous factors have been identified that are individually associated with this risk, including age and covariates that may serve as surrogates for the biological (rather than chronological) age, such as performance status, organ function parameters (e.g. bilirubin, fibrinogen, albumin, creatinine), degree of cytopenias, and disease characteristics. Using data from 3,365 adults of all ages administered intensive chemotherapy for newly diagnosed AML on SWOG trials or at M.D. Anderson Cancer Center between 1986 and 2009, we defined TRM as death within 28 days from initiation of chemotherapy based on the observation that the risk of death declined once 4 weeks had elapsed from treatment start. We then used the area under the receiver operator characteristic curve (AUC) to quantify the relative effects of individual covariates on TRM in a subset of 2,238 patients treated between 1986 and 2009 at M.D. Anderson Cancer Center. We found that multicomponent models were significantly more accurate in predicting TRM than individual covariates alone. A maximal model comprised of 17 covariates yielded an AUC of 0.83. Omission of covariates of lesser importance led to a “simplified” model that included performance status, age, platelet count, serum albumin, type of AML (secondary vs. primary), white blood cell count, percentage of blasts in the peripheral blood, and serum creatinine, yielding an AUC of 0.82.",
+        "<br>",
+        "<br>",
+        "<b>",
+        "Reference:",
+        "</b>",
+        "<br>",
+        "1. Walter RB, Othus M, Borthakur G, Ravandi F, Cortes JE, Pierce SA, Appelbaum FR, Kantarjian HM, Estey EH. Prediction of early death following induction therapy for newly diagnosed acute myeloid leukemia with pretreatment risk scores: a novel paradigm for treatment assignment.",
+        "<i>",
+        "J Clin Oncol.",
+        "</i>",
+        "2011;29(33):4417-4424. PMID: 21969499."
+      )
+    )
+  })
+  
 }
 
 
