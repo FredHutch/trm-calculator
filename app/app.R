@@ -244,6 +244,11 @@ server <- function(input, output, session) {
         ) |>   cols_align(
           align = "left",
           columns = everything()
+        ) |> opt_table_font(
+          font = list(
+            google_font(name = "Arial"),
+            "serif"
+          )
         )
     )
     
@@ -261,6 +266,11 @@ server <- function(input, output, session) {
           ) |>   cols_align(
             align = "left",
             columns = everything()
+          ) |> opt_table_font(
+            font = list(
+              google_font(name = "Arial"),
+              "serif"
+            )
           )
         )
       
@@ -281,6 +291,11 @@ server <- function(input, output, session) {
           ) |>   cols_align(
             align = "left",
             columns = everything()
+          ) |> opt_table_font(
+            font = list(
+              google_font(name = "Arial"),
+              "serif"
+            )
           )
         )
       
