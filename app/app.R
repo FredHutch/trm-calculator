@@ -241,6 +241,9 @@ server <- function(input, output, session) {
           target_col = `TRM Score Interval`
         ) |> tab_header(
           title = md("Simplified Model without Age")
+        ) |>   cols_align(
+          align = "left",
+          columns = everything()
         )
     )
     
@@ -255,7 +258,10 @@ server <- function(input, output, session) {
             target_col = `TRM Score Interval`
           ) |> tab_header(
             title = md("Simplified Model with Age (Over 60)")
-          ) 
+          ) |>   cols_align(
+            align = "left",
+            columns = everything()
+          )
         )
       
       output$trmTableUnderSixty <- render_gt({})
@@ -272,7 +278,10 @@ server <- function(input, output, session) {
             target_col = `TRM Score Interval`
           ) |> tab_header(
             title = md("Simplifed Model with Age (60 and under)")
-          ) 
+          ) |>   cols_align(
+            align = "left",
+            columns = everything()
+          )
         )
       
       output$trmTableSixtyPlus <- render_gt({})
