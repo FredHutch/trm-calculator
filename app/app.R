@@ -249,6 +249,14 @@ server <- function(input, output, session) {
             google_font(name = "Arial"),
             "serif"
           )
+        ) |> 
+        tab_style(
+          style = cell_borders(
+            sides = c("left", "right"),
+            weight = px(0.5)),
+          locations = cells_body(
+            columns = everything()
+          )
         )
     )
     
@@ -270,6 +278,14 @@ server <- function(input, output, session) {
             font = list(
               google_font(name = "Arial"),
               "serif"
+            )
+          ) |> 
+          tab_style(
+            style = cell_borders(
+              sides = c("left", "right"),
+              weight = px(0.5)),
+            locations = cells_body(
+              columns = everything()
             )
           )
         )
@@ -295,6 +311,14 @@ server <- function(input, output, session) {
             font = list(
               google_font(name = "Arial"),
               "serif"
+            )
+          ) |> 
+          tab_style(
+            style = cell_borders(
+              sides = c("left", "right"),
+              weight = px(0.5)),
+            locations = cells_body(
+              columns = everything()
             )
           )
         )
