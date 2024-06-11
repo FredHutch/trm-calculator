@@ -24,4 +24,4 @@ gtExtras;
 ### Contact
 This project is managed by the Fred Hutch Data Science Lab (DaSL)'s [Translational Analytics](https://hutchdatascience.org/tr-analytics/) team. You can read more about our group, mission, and other work on the [DaSL homepage](https://hutchdatascience.org).
 
-To report any bugs, submit patches, or request new features, please log an issue [in our issue tracker](https://github.com/FredHutch/trm-calculator/issues/new). For direct inquiries, please send an email to DaSL Translational Analytics at [analytics\@fredhutch.org](mailto:analytics@fredhutch.org){.email}.
+To report any bugs, submit patches, or request new features, please log an issue [in our issue tracker](https://github.com/FredHutch/trm-calculator/issues/new). For direct inquiries, please send an email to DaSL Translational Analytics at [analytics\@fredhutch.org](mailto:analytics@fredhutch.org).
