@@ -4,7 +4,6 @@ library(shiny)
 library(shinythemes)
 library(shinydashboard)
 library(shinyvalidate)
-library(DT)
 library(dplyr)
 library(gt)
 library(gtExtras)
@@ -237,11 +236,27 @@ server <- function(input, output, session) {
       expr = gt(trmData) |>
         gt_highlight_rows(
           rows = highlightedRow(),
-          fill = "FFB500",
+          fill = "gold",
           bold_target_only = TRUE,
           target_col = `TRM Score Interval`
         ) |> tab_header(
           title = md("Simplified Model without Age")
+        ) |>   cols_align(
+          align = "left",
+          columns = everything()
+        ) |> opt_table_font(
+          font = list(
+            google_font(name = "Arial"),
+            "serif"
+          )
+        ) |> 
+        tab_style(
+          style = cell_borders(
+            sides = c("left", "right"),
+            weight = px(0.5)),
+          locations = cells_body(
+            columns = everything()
+          )
         )
     )
     
@@ -251,12 +266,28 @@ server <- function(input, output, session) {
         expr = gt(trmDataSixtyPlus) |>
           gt_highlight_rows(
             rows = highlightedRow(),
-            fill = "FFB500",
+            fill = "gold",
             bold_target_only = TRUE,
             target_col = `TRM Score Interval`
           ) |> tab_header(
             title = md("Simplified Model with Age (Over 60)")
-          ) 
+          ) |>   cols_align(
+            align = "left",
+            columns = everything()
+          ) |> opt_table_font(
+            font = list(
+              google_font(name = "Arial"),
+              "serif"
+            )
+          ) |> 
+          tab_style(
+            style = cell_borders(
+              sides = c("left", "right"),
+              weight = px(0.5)),
+            locations = cells_body(
+              columns = everything()
+            )
+          )
         )
       
       output$trmTableUnderSixty <- render_gt({})
@@ -268,12 +299,28 @@ server <- function(input, output, session) {
         expr = gt(trmDataUnderSixty) |>
           gt_highlight_rows(
             rows = highlightedRow(),
-            fill = "FFB500",
+            fill = "gold",
             bold_target_only = TRUE,
             target_col = `TRM Score Interval`
           ) |> tab_header(
             title = md("Simplifed Model with Age (60 and under)")
-          ) 
+          ) |>   cols_align(
+            align = "left",
+            columns = everything()
+          ) |> opt_table_font(
+            font = list(
+              google_font(name = "Arial"),
+              "serif"
+            )
+          ) |> 
+          tab_style(
+            style = cell_borders(
+              sides = c("left", "right"),
+              weight = px(0.5)),
+            locations = cells_body(
+              columns = everything()
+            )
+          )
         )
       
       output$trmTableSixtyPlus <- render_gt({})
