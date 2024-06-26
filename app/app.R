@@ -47,7 +47,6 @@ ui <- dashboardPage(
     )
   ),
   
-  
   dashboardSidebar(
     sidebarMenu(
       menuItem(
@@ -134,8 +133,6 @@ ui <- dashboardPage(
 
 # Define server logic required 
 server <- function(input, output, session) {
-  change_window_title(session, "New Title")
-  
   iv <- InputValidator$new()
   iv$add_rule("age", sv_required())
   iv$add_rule("age", function(value) {
