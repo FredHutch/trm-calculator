@@ -34,6 +34,8 @@ trmIntervals_list <- trmData$`TRM Score Interval`
 
 # Set up User Interface
 ui <- dashboardPage(
+  title="Fred Hutch TRM Calculator",
+  
   dashboardHeader(
     title = tags$a(
       href='https://hutchdatascience.org',
@@ -44,6 +46,7 @@ ui <- dashboardPage(
       )
     )
   ),
+  
   
   dashboardSidebar(
     sidebarMenu(
@@ -131,6 +134,8 @@ ui <- dashboardPage(
 
 # Define server logic required 
 server <- function(input, output, session) {
+  change_window_title(session, "New Title")
+  
   iv <- InputValidator$new()
   iv$add_rule("age", sv_required())
   iv$add_rule("age", function(value) {
