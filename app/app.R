@@ -8,6 +8,9 @@ library(dplyr)
 library(gt)
 library(gtExtras)
 
+
+addResourcePath('assets', 'www')
+
 # Read in TRM table for simplified model without age
 trmData <- read.csv(
   "trm-data-ageAgnostic.csv", 
@@ -40,7 +43,7 @@ ui <- dashboardPage(
     title = tags$a(
       href='https://hutchdatascience.org',
       tags$img(
-        src='fhLogo.png',
+        src='/assets/fhLogo.png',
         height='35px',
         width='155px'
       )
@@ -64,6 +67,7 @@ ui <- dashboardPage(
   
   dashboardBody(
     includeCSS("www/hutch_theme.css"),
+    tags$head(tags$title("Fred Hutch TRM Calculator")),
     
     tags$head(tags$style(HTML(
       '.myClass { 
