@@ -34,6 +34,8 @@ trmIntervals_list <- trmData$`TRM Score Interval`
 
 # Set up User Interface
 ui <- dashboardPage(
+  title="Fred Hutch TRM Calculator",
+  
   dashboardHeader(
     title = tags$a(
       href='https://hutchdatascience.org',
