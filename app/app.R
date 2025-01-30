@@ -8,7 +8,6 @@ library(dplyr)
 library(gt)
 library(gtExtras)
 
-
 addResourcePath('assets', 'www')
 
 # Read in TRM table for simplified model without age
@@ -84,7 +83,7 @@ ui <- dashboardPage(
       $(document).ready(function() {
         $("header").find("nav").append(\'<span class="myClass"> Treatment-Related Mortality (TRM) Calculator </span>\');
       })
-     ')),
+    ')),
     
     tabItems(
       tabItem(
@@ -123,10 +122,21 @@ ui <- dashboardPage(
               "blast", "Blast Percentage in Peripheral Blood (%)", 
               min = 0, max = 100, value = NULL
             ),
-            numericInput("creatinine", "Creatinine (mg/dL)", min = 0, value = NULL),
-            actionButton(inputId = "calculateNow", label = strong("Calculate")),
-            actionButton(inputId = "reset", label = strong("Reset")),
-            htmlOutput(outputId = "trmScore")
+            numericInput(
+              "creatinine", "Creatinine (mg/dL)", 
+              min = 0, value = NULL
+            ),
+            actionButton(
+              inputId = "calculateNow", 
+              label = strong("Calculate")
+            ),
+            actionButton(
+              inputId = "reset", 
+              label = strong("Reset")
+            ),
+            htmlOutput(
+              outputId = "trmScore"
+            )
           )
         ),
         
@@ -214,15 +224,8 @@ server <- function(input, output, session) {
   })
   
   iv$enable()
-
-  vals <- reactiveValues(
-    row_priority = trmIntervals_list,
-    row_color = rep('white', 7)
-  )
   
-  calculation <- eventReactive(
-    input$calculateNow, 
-    {
+  calculation <- eventReactive(input$calculateNow, {
       req(iv$is_valid())
       
       PS = as.numeric(input$performance)
@@ -249,11 +252,6 @@ server <- function(input, output, session) {
   )
   
   
-  output$trmScore <- renderText({
-    paste("The TRM Score is: ", "<b>",calculation(),"</b>")
-  })
-  
-  
   # Based on calculated TRM score, figure out which row to highlight in table
   highlightedRow <- eventReactive(input$calculateNow, {
     rowIndex = 0
@@ -272,13 +270,48 @@ server <- function(input, output, session) {
     rowIndex
   })
 
-  # Show the data table for the simplified model + relevant age
-  observeEvent(input$calculateNow, {
-    req(iv$is_valid())
+  
+  output$trmScore <- renderText({
+    paste("The TRM Score is: ", "<b>",calculation(),"</b>")
+  })
 
-    # Show the data table for the simplified model
-    output$trmTable <- render_gt(
-      expr = gt(trmData) |>
+  # Generate table for the simplified model
+  output$trmTable <- render_gt({
+    expr = gt(trmData) |>
+      gt_highlight_rows(
+        rows = highlightedRow(),
+        fill = "gold",
+        bold_target_only = TRUE,
+        target_col = `TRM Score Interval`
+      ) |> 
+      tab_header(
+        title = md("Simplified Model without Age")
+      ) |>
+      cols_align(
+        align = "left",
+        columns = everything()
+      ) |>
+      opt_table_font(
+        font = list(
+          google_font(name = "Arial"),
+          "serif"
+        )
+      ) |> 
+      tab_style(
+        style = cell_borders(
+          sides = c("left", "right"),
+          weight = px(0.5)),
+        locations = cells_body(
+          columns = everything()
+        )
+      )
+  })
+  
+  # Generate table for age > 60
+  output$trmTableSixtyPlus <- render_gt({
+    age = input$age
+    if(!is.na(age) && age > 60){
+      expr = gt(trmDataSixtyPlus) |>
         gt_highlight_rows(
           rows = highlightedRow(),
           fill = "gold",
@@ -286,7 +319,7 @@ server <- function(input, output, session) {
           target_col = `TRM Score Interval`
         ) |> 
         tab_header(
-          title = md("Simplified Model without Age")
+          title = md("Simplified Model with Age (Over 60)")
         ) |>
         cols_align(
           align = "left",
@@ -306,75 +339,46 @@ server <- function(input, output, session) {
             columns = everything()
           )
         )
-    )
-    
-    # If age > 60, show only the older age table
-    if(input$age > 60){
-      output$trmTableSixtyPlus <- render_gt(
-        expr = gt(trmDataSixtyPlus) |>
-          gt_highlight_rows(
-            rows = highlightedRow(),
-            fill = "gold",
-            bold_target_only = TRUE,
-            target_col = `TRM Score Interval`
-          ) |> 
-          tab_header(
-            title = md("Simplified Model with Age (Over 60)")
-          ) |>
-          cols_align(
-            align = "left",
-            columns = everything()
-          ) |>
-          opt_table_font(
-            font = list(
-              google_font(name = "Arial"),
-              "serif"
-            )
-          ) |> 
-          tab_style(
-            style = cell_borders(
-              sides = c("left", "right"),
-              weight = px(0.5)),
-            locations = cells_body(
-              columns = everything()
-            )
-          )
-        )
-      
-      output$trmTableUnderSixty <- render_gt({})
+    } else {
+      expr = NULL
     }
-    
-    # If age <= 60, show only the younger age table
-    if(input$age <= 60){
-      output$trmTableUnderSixty <- render_gt(
-        expr = gt(trmDataUnderSixty) |>
-          gt_highlight_rows(
-            rows = highlightedRow(),
-            fill = "gold",
-            bold_target_only = TRUE,
-            target_col = `TRM Score Interval`
-          ) |> tab_header(
-            title = md("Simplifed Model with Age (60 and under)")
-          ) |>   cols_align(
-            align = "left",
+  })
+      
+  # Generate table for age <= 60
+  output$trmTableUnderSixty <- render_gt({
+    age = input$age
+    if(!is.na(age) && age <= 60){
+      cat("Age < 60. Woohoo!")
+      
+      gt(trmDataUnderSixty) |>
+        gt_highlight_rows(
+          rows = highlightedRow(),
+          fill = "gold",
+          bold_target_only = TRUE,
+          target_col = `TRM Score Interval`
+        ) |> tab_header(
+          title = md("Simplifed Model with Age (60 and under)")
+        ) |>   cols_align(
+          align = "left",
+          columns = everything()
+        ) |> opt_table_font(
+          font = list(
+            google_font(name = "Arial"),
+            "serif"
+          )
+        ) |> 
+        tab_style(
+          style = cell_borders(
+            sides = c("left", "right"),
+            weight = px(0.5)),
+          locations = cells_body(
             columns = everything()
-          ) |> opt_table_font(
-            font = list(
-              google_font(name = "Arial"),
-              "serif"
-            )
-          ) |> 
-          tab_style(
-            style = cell_borders(
-              sides = c("left", "right"),
-              weight = px(0.5)),
-            locations = cells_body(
-              columns = everything()
-            )
           )
         )
+    } else {
+      cat("Age > 60. Too old!")
       
-      output$trmTableSixtyPlus <- render_gt({})
+      NULL
     }
   })
   
