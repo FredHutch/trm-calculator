@@ -91,15 +91,38 @@ ui <- dashboardPage(
         tabName = "trm",
         fluidRow(
           box(
-            selectInput("performance", "Performance Status (0 to 4)", choices = c("0", "1", "2", "3", "4")),
-            numericInput("age", "Age (Years)", min = 0, max = 125, value = NULL),
-            numericInput("platelets", HTML(paste0("Platelet Count (x10",tags$sup("3"), '/uL)')), min = 0, value = NULL),
-            numericInput("albumin", "Albumin (g/dL)", min = 0, value = NULL),
-            checkboxInput("secondaryAML", strong("Secondary AML? (Check if yes)"), value = FALSE)
+            selectInput(
+              "performance", "Performance Status (0 to 4)", 
+              choices = c("0", "1", "2", "3", "4")
+            ),
+            numericInput(
+              "age", "Age (Years)", 
+              min = 0, max = 125, value = NULL
+            ),
+            numericInput(
+              "platelets", 
+              HTML(paste0("Platelet Count (x10",tags$sup("3"), '/uL)')), 
+              min = 0, value = NULL
+            ),
+            numericInput(
+              "albumin", "Albumin (g/dL)", 
+              min = 0, value = NULL
+            ),
+            checkboxInput(
+              "secondaryAML", strong("Secondary AML? (Check if yes)"), 
+              value = FALSE
+            )
           ),
           box(
-            numericInput("wbc", HTML(paste0("White Blood Cell Count (x10",tags$sup("3"), '/uL)')), min = 0, value = NULL),
-            numericInput("blast", "Blast Percentage in Peripheral Blood (%)", min = 0, max = 100, value = NULL),
+            numericInput(
+              "wbc", 
+              HTML(paste0("White Blood Cell Count (x10",tags$sup("3"), '/uL)')),
+              min = 0, value = NULL
+            ),
+            numericInput(
+              "blast", "Blast Percentage in Peripheral Blood (%)", 
+              min = 0, max = 100, value = NULL
+            ),
             numericInput("creatinine", "Creatinine (mg/dL)", min = 0, value = NULL),
             actionButton(inputId = "calculateNow", label = strong("Calculate")),
             actionButton(inputId = "reset", label = strong("Reset")),
@@ -108,9 +131,18 @@ ui <- dashboardPage(
         ),
         
         fluidRow(
-          column(12, gt_output(outputId = "trmTable")),
-          column(12, gt_output(outputId = "trmTableSixtyPlus")),
-          column(12, gt_output(outputId = "trmTableUnderSixty"))
+          column(
+            12, 
+            gt_output(outputId = "trmTable")
+          ),
+          column(
+            12, 
+            gt_output(outputId = "trmTableSixtyPlus")
+          ),
+          column(
+            12, 
+            gt_output(outputId = "trmTableUnderSixty")
+          )
         ),
         
         fluidRow(
@@ -138,42 +170,49 @@ ui <- dashboardPage(
 # Define server logic required 
 server <- function(input, output, session) {
   iv <- InputValidator$new()
+  
   iv$add_rule("age", sv_required())
   iv$add_rule("age", function(value) {
     if (value < 0) {
       "Age must be greater than 0"
     }
   })
+  
   iv$add_rule("platelets", sv_required())
   iv$add_rule("platelets", function(value) {
     if (value < 0) {
       "Platelet count must be greater than 0"
     }
   })
+  
   iv$add_rule("albumin", sv_required())
   iv$add_rule("albumin", function(value) {
     if (value < 0) {
       "Albumin must be greater than 0"
     }
   })
+  
   iv$add_rule("wbc", sv_required())
   iv$add_rule("wbc", function(value) {
     if (value < 0) {
       "WBC must be greater than 0"
     }
   })
+  
   iv$add_rule("blast", sv_required())
   iv$add_rule("blast", function(value) {
     if (value < 0 || value > 100) {
       "Blast Percentage must be between 0 and 100"
     }
   })
+  
   iv$add_rule("creatinine", sv_required())
   iv$add_rule("creatinine", function(value) {
     if (value < 0) {
       "Creatinine must be greater than 0"
     }
   })
+  
   iv$enable()
 
   vals <- reactiveValues(
@@ -245,12 +284,15 @@ server <- function(input, output, session) {
           fill = "gold",
           bold_target_only = TRUE,
           target_col = `TRM Score Interval`
-        ) |> tab_header(
+        ) |> 
+        tab_header(
           title = md("Simplified Model without Age")
-        ) |>   cols_align(
+        ) |>
+        cols_align(
           align = "left",
           columns = everything()
-        ) |> opt_table_font(
+        ) |>
+        opt_table_font(
           font = list(
             google_font(name = "Arial"),
             "serif"
@@ -275,12 +317,15 @@ server <- function(input, output, session) {
             fill = "gold",
             bold_target_only = TRUE,
             target_col = `TRM Score Interval`
-          ) |> tab_header(
+          ) |> 
+          tab_header(
             title = md("Simplified Model with Age (Over 60)")
-          ) |>   cols_align(
+          ) |>
+          cols_align(
             align = "left",
             columns = everything()
-          ) |> opt_table_font(
+          ) |>
+          opt_table_font(
             font = list(
               google_font(name = "Arial"),
               "serif"
