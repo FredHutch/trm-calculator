@@ -179,6 +179,7 @@ ui <- dashboardPage(
 
 # Define server logic required 
 server <- function(input, output, session) {
+  
   iv <- InputValidator$new()
   
   iv$add_rule("age", sv_required())
@@ -225,161 +226,161 @@ server <- function(input, output, session) {
   
   iv$enable()
   
-  calculation <- eventReactive(input$calculateNow, {
-      req(iv$is_valid())
-      
-      PS = as.numeric(input$performance)
-      age = input$age
-      platelets = input$platelets
-      albumin = input$albumin
-      hasSecondaryAML = ifelse(input$secondaryAML==T,1,0)
-      WBC = input$wbc # white blood count
-      PBBP = input$blast # peripheral blood blast percentage
-      creatinine = input$creatinine
-      
-      x = -4.08 + 0.89*PS + 0.03*age - 0.008*platelets - 0.48*albumin +
-        0.47*hasSecondaryAML  + 0.007*WBC - 0.007*PBBP + 0.34*creatinine
-      
-      output = round(
-        100/(1 + exp(-x)),
-        digits = 4
-      )
-      
-      output
-    },
-    ignoreInit = TRUE,
-    ignoreNULL = TRUE
-  )
+  score <- reactiveVal(NULL)
+  highlightedRow <- reactiveVal(NULL)
+  trm_table_data <- reactiveVal(NULL)
+  trm_under_table_data <- reactiveVal(NULL)
+  trm_over_table_data <- reactiveVal(NULL)
   
-  
-  # Based on calculated TRM score, figure out which row to highlight in table
-  highlightedRow <- eventReactive(input$calculateNow, {
-    rowIndex = 0
+  # Calculation Button
+  observeEvent(input$calculateNow, {
+    req(iv$is_valid())
     
+    PS = as.numeric(input$performance)
+    age = input$age
+    platelets = input$platelets
+    albumin = input$albumin
+    hasSecondaryAML = ifelse(input$secondaryAML == T,1,0)
+    WBC = input$wbc # white blood count
+    PBBP = input$blast # peripheral blood blast percentage
+    creatinine = input$creatinine
+    
+    x = -4.08 + 0.89*PS + 0.03*age - 0.008*platelets - 0.48*albumin +
+      0.47*hasSecondaryAML  + 0.007*WBC - 0.007*PBBP + 0.34*creatinine
+    x_t = round(100/(1 + exp(-x)), digits = 4)
+    score(x_t)
+    
+    rowIndex = 0
     # Iterate over options in the TRM intervals and match the score
     for(elem in trmIntervals_list){
       rowIndex = rowIndex + 1
       minValue = as.numeric(strsplit(elem, " - ")[[1]][1])
       maxValue = as.numeric(strsplit(elem, " - ")[[1]][2])
       # If we find the right row, we can break out of our loop
-      if(calculation() >= minValue && calculation() <= maxValue){
+      if(score() >= minValue && score() <= maxValue){
         break
       }
     }
+    highlightedRow(rowIndex)
     
-    rowIndex
-  })
-
-  
-  output$trmScore <- renderText({
-    paste("The TRM Score is: ", "<b>",calculation(),"</b>")
-  })
-
-  # Generate table for the simplified model
-  output$trmTable <- render_gt({
-    expr = gt(trmData) |>
-      gt_highlight_rows(
-        rows = highlightedRow(),
-        fill = "gold",
-        bold_target_only = TRUE,
-        target_col = `TRM Score Interval`
-      ) |> 
-      tab_header(
-        title = md("Simplified Model without Age")
-      ) |>
-      cols_align(
-        align = "left",
-        columns = everything()
-      ) |>
-      opt_table_font(
-        font = list(
-          google_font(name = "Arial"),
-          "serif"
-        )
-      ) |> 
-      tab_style(
-        style = cell_borders(
-          sides = c("left", "right"),
-          weight = px(0.5)),
-        locations = cells_body(
-          columns = everything()
-        )
-      )
-  })
-  
-  # Generate table for age > 60
-  output$trmTableSixtyPlus <- render_gt({
-    age = input$age
-    if(!is.na(age) && age > 60){
-      expr = gt(trmDataSixtyPlus) |>
+    trm_table_data(
+      gt(trmData) |>
         gt_highlight_rows(
           rows = highlightedRow(),
           fill = "gold",
           bold_target_only = TRUE,
           target_col = `TRM Score Interval`
-        ) |> 
+        ) |>
         tab_header(
-          title = md("Simplified Model with Age (Over 60)")
+         title = md("Simplified Model without Age")
         ) |>
         cols_align(
-          align = "left",
-          columns = everything()
+         align = "left",
+         columns = everything()
         ) |>
         opt_table_font(
-          font = list(
-            google_font(name = "Arial"),
-            "serif"
-          )
+         font = list(
+           google_font(name = "Arial"),
+           "serif"
+         )
         ) |> 
         tab_style(
-          style = cell_borders(
-            sides = c("left", "right"),
-            weight = px(0.5)),
-          locations = cells_body(
-            columns = everything()
-          )
+         style = cell_borders(
+           sides = c("left", "right"),
+           weight = px(0.5)),
+         locations = cells_body(
+           columns = everything()
+         )
         )
-    } else {
-      expr = NULL
+    )
+    
+    if(!is.na(age) && age > 60 && !is.null(score())){
+      trm_over_table_data(
+        gt(trmDataSixtyPlus) |>
+          gt_highlight_rows(
+            rows = highlightedRow(),
+            fill = "gold",
+            bold_target_only = TRUE,
+            target_col = `TRM Score Interval`
+          ) |> 
+          tab_header(
+            title = md("Simplified Model with Age (Over 60)")
+          ) |>
+          cols_align(
+            align = "left",
+            columns = everything()
+          ) |>
+          opt_table_font(
+            font = list(
+              google_font(name = "Arial"),
+              "serif"
+            )
+          ) |> 
+          tab_style(
+            style = cell_borders(
+              sides = c("left", "right"),
+              weight = px(0.5)),
+            locations = cells_body(
+              columns = everything()
+            )
+          )
+      )
+      
+      trm_under_table_data(NULL)
     }
+    
+    if(!is.na(age) && age <= 60 && !is.null(score())){
+      trm_under_table_data(
+        gt(trmDataUnderSixty) |>
+          gt_highlight_rows(
+            rows = highlightedRow(),
+            fill = "gold",
+            bold_target_only = TRUE,
+            target_col = `TRM Score Interval`
+          ) |> tab_header(
+            title = md("Simplifed Model with Age (60 and under)")
+          ) |>   cols_align(
+            align = "left",
+            columns = everything()
+          ) |> opt_table_font(
+            font = list(
+              google_font(name = "Arial"),
+              "serif"
+            )
+          ) |> 
+          tab_style(
+            style = cell_borders(
+              sides = c("left", "right"),
+              weight = px(0.5)),
+            locations = cells_body(
+              columns = everything()
+            )
+          ) 
+      )
+      
+      trm_over_table_data(NULL)
+    }
+    
   })
-      
-  # Generate table for age <= 60
+  
+  output$trmScore <- renderText({
+    if (is.null(score())) return("No score calculated yet.")
+    paste("The TRM Score is: ", "<b>",score(),"</b>")
+  })
+  
+  output$trmTable <- render_gt({
+    req(trm_table_data())
+    trm_table_data()
+  })
+  
+  output$trmTableSixtyPlus <- render_gt({
+    req(trm_over_table_data())
+    trm_over_table_data()
+  })
+  
   output$trmTableUnderSixty <- render_gt({
-    age = input$age
-    if(!is.na(age) && age <= 60){
-      cat("Age < 60. Woohoo!")
-      
-      gt(trmDataUnderSixty) |>
-        gt_highlight_rows(
-          rows = highlightedRow(),
-          fill = "gold",
-          bold_target_only = TRUE,
-          target_col = `TRM Score Interval`
-        ) |> tab_header(
-          title = md("Simplifed Model with Age (60 and under)")
-        ) |>   cols_align(
-          align = "left",
-          columns = everything()
-        ) |> opt_table_font(
-          font = list(
-            google_font(name = "Arial"),
-            "serif"
-          )
-        ) |> 
-        tab_style(
-          style = cell_borders(
-            sides = c("left", "right"),
-            weight = px(0.5)),
-          locations = cells_body(
-            columns = everything()
-          )
-        )
-    } else {
-      cat("Age > 60. Too old!")
-      
-      NULL
-    }
+    req(trm_under_table_data())
+    trm_under_table_data()
   })
   
   # Hitting the reset button will clear all values
@@ -392,10 +393,11 @@ server <- function(input, output, session) {
     updateNumericInput(session, "wbc", value = NA)
     updateNumericInput(session, "blast", value = NA)
     updateNumericInput(session, "creatinine", value = NA)
-    output$trmScore <- renderText({""})
-    output$trmTableSixtyPlus <- render_gt({})
-    output$trmTableUnderSixty <- render_gt({})
-    output$trmTable <- render_gt({})
+    
+    score(NULL)
+    trm_table_data(NULL)
+    trm_over_table_data(NULL)
+    trm_under_table_data(NULL)
   })
   
   daslWebsite <- a("Data Science Lab (DaSL)", href="https://hutchdatascience.org")
@@ -415,10 +417,10 @@ server <- function(input, output, session) {
       )
     )
   })
-
+  
   trmManuscript <- a("Prediction of Treatment-Related Mortality after Induction Therapy for Newly Diagnosed Acute Myeloid Leukemia",
-                 href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3221524/")
-
+                     href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3221524/")
+  
   output$background <- renderText({
     HTML(
       paste(
