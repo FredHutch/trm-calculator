@@ -38,7 +38,17 @@ trmIntervals_list <- trmData$`TRM Score Interval`
 # Set up User Interface
 ui <- dashboardPage(
   title="Fred Hutch TRM Calculator",
-  
+
+  shiny::tags$head(
+    shiny::tags$script(
+      src = "https://www.googletagmanager.com/gtag/js?id=G-09L5P1T9G3",
+      async = ""
+    ),
+    shiny::tags$script(
+      src = "static/js/gtag.js"
+    )
+  )
+    
   dashboardHeader(
     title = tags$a(
       href='https://hutchdatascience.org',
