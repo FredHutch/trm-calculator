@@ -1,46 +1,21 @@
-
 # Call required packages
 library(shiny)
 library(shinythemes)
 library(shinydashboard)
-library(shinyvalidate)
-library(dplyr)
 library(gt)
-library(gtExtras)
 
+# Bring in images/CSS
 addResourcePath('assets', 'www')
-
-# Read in TRM table for simplified model without age
-trmData <- read.csv(
-  "trm-data-ageAgnostic.csv", 
-  header = TRUE,
-  check.names = FALSE
-)
-
-# Read in TRM table for simplified model with age for 60+
-trmDataSixtyPlus <- read.csv(
-  "trm-data-sixtyplus.csv", 
-  header = TRUE,
-  check.names = FALSE
-)
-
-# Read in TRM table for simplified model with age for 60 and under
-trmDataUnderSixty <- read.csv(
-  "trm-data-undersixty.csv", 
-  header = TRUE,
-  check.names = FALSE
-)
-
-# Define the possible trm Intervals
-trmIntervals_list <- trmData$`TRM Score Interval`
 
 # Set up User Interface
 ui <- dashboardPage(
+  # Title
   title="Fred Hutch TRM Calculator",
   
+  # Header (FH icon with link to OCDO)
   dashboardHeader(
     title = tags$a(
-      href='https://hutchdatascience.org',
+      href='https://ocdo.fredhutch.org',
       tags$img(
         src='/assets/fhLogo.png',
         height='35px',
@@ -49,6 +24,7 @@ ui <- dashboardPage(
     )
   ),
   
+  # Sidebar with tabs
   dashboardSidebar(
     sidebarMenu(
       menuItem(
@@ -64,6 +40,7 @@ ui <- dashboardPage(
     )
   ),
   
+  # Dashboard body - themes, aesthetics, inputs, and outputs
   dashboardBody(
     includeCSS("www/hutch_theme.css"),
     tags$head(tags$title("Fred Hutch TRM Calculator")),
@@ -79,6 +56,7 @@ ui <- dashboardPage(
         color: white;
       }
     '))),
+    
     tags$script(HTML('
       $(document).ready(function() {
         $("header").find("nav").append(\'<span class="myClass"> Treatment-Related Mortality (TRM) Calculator </span>\');
@@ -89,6 +67,7 @@ ui <- dashboardPage(
       tabItem(
         tabName = "trm",
         fluidRow(
+          
           box(
             selectInput(
               "performance", "Performance Status (0 to 4)", 
@@ -112,6 +91,7 @@ ui <- dashboardPage(
               value = FALSE
             )
           ),
+          
           box(
             numericInput(
               "wbc", 
