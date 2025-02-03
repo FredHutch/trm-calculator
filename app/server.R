@@ -23,9 +23,17 @@ server <- function(input, output, session) {
   # Initialize reactive values for output score and tables
   score <- reactiveVal(NULL)
   highlightedRow <- reactiveVal(NULL)
-  trm_table_data <- reactiveVal(NULL)
   trm_under_table_data <- reactiveVal(NULL)
   trm_over_table_data <- reactiveVal(NULL)
+  trm_table_data <- reactiveVal(NULL)
+  
+  # Set the baseline TRM table to be the simple model w/out age and no highlight
+  trm_table_data(
+    make_gt_from_table_no_highlight(
+      trmData, 
+      "Simplified Model without Age"
+    )
+  )
   
   # Click the 'calculate' button to trigger output
   observeEvent(input$calculateNow, {
@@ -119,7 +127,12 @@ server <- function(input, output, session) {
     updateNumericInput(session, "creatinine", value = NA)
     
     score(NULL)
-    trm_table_data(NULL)
+    trm_table_data(
+      make_gt_from_table_no_highlight(
+        trmData, 
+        "Simplified Model without Age"
+      )
+    )
     trm_over_table_data(NULL)
     trm_under_table_data(NULL)
   })

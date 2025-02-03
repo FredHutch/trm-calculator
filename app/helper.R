@@ -111,6 +111,30 @@ make_gt_from_table <- function(current_table, row_to_highlight, table_title) {
     ) 
 }
 
+# Create a gt table based on the input TRM table
+make_gt_from_table_no_highlight <- function(current_table, table_title) {
+  gt(current_table) |>
+    tab_header(
+      title = md(table_title)
+    ) |> cols_align(
+      align = "left",
+      columns = everything()
+    ) |> opt_table_font(
+      font = list(
+        google_font(name = "Arial"),
+        "serif"
+      )
+    ) |> 
+    tab_style(
+      style = cell_borders(
+        sides = c("left", "right"),
+        weight = px(0.5)),
+      locations = cells_body(
+        columns = everything()
+      )
+    ) 
+}
+
 
 # Print out contact information for the bottom of the app
 print_contact_info <- function() {

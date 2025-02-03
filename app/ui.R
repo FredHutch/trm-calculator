@@ -28,12 +28,17 @@ ui <- dashboardPage(
   dashboardSidebar(
     sidebarMenu(
       menuItem(
-        "TRM Calculator", 
+        "TRM Score Calculator", 
         tabName = "trm", 
         icon = icon("calculator")
       ),
       menuItem(
-        "Background", 
+        "TRM Probability Tables", 
+        tabName = "tables", 
+        icon = icon("table")
+      ),
+      menuItem(
+        "Related Literature", 
         tabName = "background", 
         icon = icon("book")
       )
@@ -123,6 +128,21 @@ ui <- dashboardPage(
         fluidRow(
           column(
             12, 
+            box(
+              width = 12, 
+              uiOutput(outputId = "contactInfo")
+            )
+          )
+        )
+      ),
+      
+      
+      tabItem(
+        tabName = "tables",
+        
+        fluidRow(
+          column(
+            12, 
             gt_output(outputId = "trmTable")
           ),
           column(
@@ -133,18 +153,10 @@ ui <- dashboardPage(
             12, 
             gt_output(outputId = "trmTableUnderSixty")
           )
-        ),
-        
-        fluidRow(
-          column(
-            12, 
-            box(
-              width = 12, 
-              uiOutput(outputId = "contactInfo")
-            )
-          )
         )
       ),
+      
+      
       
       tabItem(
         tabName = "background",
