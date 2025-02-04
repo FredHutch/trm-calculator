@@ -1,6 +1,6 @@
 /* logo */
 .skin-blue .main-header .logo {
-    background-color: #F4F4F4;    /*light-gray*/
+    background-color: #ecf0f5;    /*light-gray*/
     color: #0A799A;
 }
 
@@ -28,9 +28,12 @@
 
 /* active selected tab in the sidebarmenu */
 .skin-blue .main-sidebar .sidebar .sidebar-menu .active a{
-    background-color: #00ABC8;     /*bright blue*/
-    color: #FFFFFF;
+    background-color: #ecf0f5;     /*bright blue*/
+    color: #1B365D;
     font-weight: bold;
+    border: 2px solid #ecf0f5; /* Change color as needed */
+    border-radius: 5px; /* Optional: Rounded corners */
+    margin: 5px; /* Adds spacing between tabs */
 }
 
 /* other links in the sidebarmenu */
@@ -38,13 +41,19 @@
     background-color: #0A799A;    /*teal*/
     color: #FFFFFF;
     font-weight: bold;
+    border: 2px solid #1B365D; /* Change color as needed */
+    border-radius: 5px; /* Optional: Rounded corners */
+    margin: 5px; /* Adds spacing between tabs */
 }
 
 /* other links in the sidebarmenu when hovered */
 .skin-blue .main-sidebar .sidebar .sidebar-menu a:hover{
-    background-color: #F4F4F4;
-    color: #00ABC8;
+    background-color: #ecf0f5;
+    color: #1B365D;
     font-weight: bold;
+    border: 2px solid #ecf0f5; /* Change color as needed */
+    border-radius: 5px; /* Optional: Rounded corners */
+    margin: 5px; /* Adds spacing between tabs */
 }
 
 /* toggle button color  */
