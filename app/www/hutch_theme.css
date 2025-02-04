@@ -1,12 +1,12 @@
 /* logo */
 .skin-blue .main-header .logo {
-    background-color: #ecf0f5;    /*light-gray*/
+    background-color: #ecf0f5;
     color: #0A799A;
 }
 
 /* logo when hovered */
 .skin-blue .main-header .logo:hover {
-    background-color: #FFFFFF;    /*white*/
+    background-color: #FFFFFF;
 }
                           
 /* navbar (rest of the header) */
@@ -28,22 +28,22 @@
 
 /* active selected tab in the sidebarmenu */
 .skin-blue .main-sidebar .sidebar .sidebar-menu .active a{
-    background-color: #ecf0f5;     /*bright blue*/
+    background-color: #ecf0f5;
     color: #1B365D;
     font-weight: bold;
-    border: 2px solid #ecf0f5; /* Change color as needed */
-    border-radius: 5px; /* Optional: Rounded corners */
-    margin: 5px; /* Adds spacing between tabs */
+    border: 2px solid #ecf0f5;
+    border-radius: 5px;
+    margin: 5px;
 }
 
 /* other links in the sidebarmenu */
 .skin-blue .main-sidebar .sidebar .sidebar-menu a{
-    background-color: #0A799A;    /*teal*/
+    background-color: #0A799A;
     color: #FFFFFF;
     font-weight: bold;
-    border: 2px solid #1B365D; /* Change color as needed */
-    border-radius: 5px; /* Optional: Rounded corners */
-    margin: 5px; /* Adds spacing between tabs */
+    border: 2px solid #1B365D;
+    border-radius: 5px;
+    margin: 5px;
 }
 
 /* other links in the sidebarmenu when hovered */
@@ -51,9 +51,9 @@
     background-color: #ecf0f5;
     color: #1B365D;
     font-weight: bold;
-    border: 2px solid #ecf0f5; /* Change color as needed */
-    border-radius: 5px; /* Optional: Rounded corners */
-    margin: 5px; /* Adds spacing between tabs */
+    border: 2px solid #ecf0f5;
+    border-radius: 5px;
+    margin: 5px;
 }
 
 /* toggle button color  */
