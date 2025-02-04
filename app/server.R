@@ -91,11 +91,12 @@ server <- function(input, output, session) {
   # Save output score to TRM text output
   output$trmScore <- renderText({
     if (is.null(score())){
-      return("No score calculated yet.")
+      return("<font size=\"6\"> _________________ </font>")
     } 
     
-    paste("The TRM Score is: ", "<b>",score(),"</b>")
+    paste("<font size=\"6\"><b><mark>",score(),"</mark></b></font>")
   })
+  
   
   # Save TRM table to TRM table output
   output$trmTable <- render_gt({

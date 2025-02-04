@@ -3,6 +3,7 @@ library(shiny)
 library(shinythemes)
 library(shinydashboard)
 library(gt)
+library(bslib)
 
 # Bring in images/CSS
 addResourcePath('assets', 'www')
@@ -59,8 +60,10 @@ ui <- dashboardPage(
         padding: 0 15px;
         overflow: hidden;
         color: white;
-      }
-    '))),
+      }'
+    ))),
+    
+    tags$head(tags$style(HTML('.bslib-value-box .value-box-title {font-size:18px;}'))),
     
     tags$script(HTML('
       $(document).ready(function() {
@@ -118,9 +121,22 @@ ui <- dashboardPage(
             actionButton(
               inputId = "reset", 
               label = strong("Reset")
-            ),
-            htmlOutput(
-              outputId = "trmScore"
+            )
+          )
+        ),
+        
+        fluidRow(
+          column(
+            12, 
+            box(
+              width = 12, 
+              
+              value_box(
+                title = "The TRM Score is: ",
+                value = htmlOutput(outputId = "trmScore"),
+                theme = value_box_theme(bg = "#1B365D")
+              )
+              
             )
           )
         ),
