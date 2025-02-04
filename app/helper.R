@@ -114,18 +114,15 @@ make_gt_from_table <- function(current_table, row_to_highlight, table_title) {
 
 # Print out contact information for the bottom of the app
 print_contact_info <- function() {
-  daslWebsite <- a("Data Science Lab (DaSL)", href="https://hutchdatascience.org")
-  daslTA <- a("Translational Analytics", href="https://hutchdatascience.org/tr-analytics/")
-  daslEmail <- a("analytics@fredhutch.org", href="mailto:analytics@fredhutch.org")
+  issue_tracker <- a("a new issue", href="https://github.com/FredHutch/trm-calculator/issues/new/")
+  email <- a("katrus@fredhutch.org", href="mailto:katrus@fredhutch.org")
   
   HTML(
     paste(
-      "This application was developed by the Fred Hutch ",
-      daslWebsite,
-      ". For questions or feedback regarding this application, email DaSL ",
-      daslTA,
-      " at ",
-      daslEmail,
+      "This application was developed in partnership with the Fred Hutch Data Science Lab (DaSL). To request new features or report any concerns, please file ",
+      issue_tracker,
+      " on GitHub. For direct inquiries or clinical questions related to the model, please send an email to Katie Russell at ",
+      email,
       "."
     )
   )
@@ -137,30 +134,62 @@ print_jco_manuscript <- function() {
   trmManuscript <- a("Prediction of Treatment-Related Mortality after Induction Therapy for Newly Diagnosed Acute Myeloid Leukemia",
                      href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3221524/")
   
+  manuscript_one <- a("Second Allogeneic Hematopoietic Cell Transplantation for Relapsed Adult Acute Myeloid Leukemia: Outcomes and Prognostic Factors",
+                     href="https://www.sciencedirect.com/science/article/pii/S2666636724004810")
+  
+  manuscript_two <- a("Utility of the Treatment-Related Mortality (TRM) score to predict outcomes of adults with acute myeloid leukemia undergoing allogeneic hematopoietic cell transplantation",
+                     href="https://www.nature.com/articles/s41375-022-01574-5")
+  
+  manuscript_three <- a("Accuracy of SIE/SIES/GITMO Consensus Criteria for Unfitness to Predict Early Mortality After Intensive Chemotherapy in Adults With AML or Other High-Grade Myeloid Neoplasm",
+                     href="https://ascopubs.org/doi/10.1200/JCO.20.01392?url_ver=Z39.88-2003&rfr_id=ori:rid:crossref.org&rfr_dat=cr_pub%20%200pubmed")
+  
+  manuscript_four <- a("Prediction of early death in adults with relapsed or refractory acute myeloid leukemia",
+                     href="https://www.tandfonline.com/doi/10.3109/10428194.2015.1135436?url_ver=Z39.88-2003&rfr_id=ori:rid:crossref.org&rfr_dat=cr_pub%20%200pubmed")
+  
+  manuscript_five <- a("The treatment-related mortality score is associated with non-fatal adverse events following intensive AML induction chemotherapy",
+                     href="https://www.nature.com/articles/bcj201497")
   HTML(
     paste(
-      "<b>",
-      trmManuscript,
-      "</b>",
+      "Below is the abstract for Walter et al.'s manuscript ",
+      "<b>", trmManuscript, "</b>published in the <i> Journal of Clinical Oncology</i>. This publication provides an overview of the development of the presented model of TRM risk: ",
       "<br>",
       "<br>",
-      "<i>",
-      "Roland B. Walter, Megan Othus, Gautam Borthakur, Farhad Ravandi, Jorge E. Cortes, Sherry A. Pierce, Frederick R. Appelbaum, Hagop A. Kantarjian, and Elihu H. Estey",
-      "</i>",
-      "<br>",
-      "<br>",
+      "<b>Abstract</b><br>",
       "It is well known that the risk treatment-related mortality (TRM) varies considerably between individual patients with acute myeloid leukemia (AML). Numerous factors have been identified that are individually associated with this risk, including age and covariates that may serve as surrogates for the biological (rather than chronological) age, such as performance status, organ function parameters (e.g. bilirubin, fibrinogen, albumin, creatinine), degree of cytopenias, and disease characteristics. Using data from 3,365 adults of all ages administered intensive chemotherapy for newly diagnosed AML on SWOG trials or at M.D. Anderson Cancer Center between 1986 and 2009, we defined TRM as death within 28 days from initiation of chemotherapy based on the observation that the risk of death declined once 4 weeks had elapsed from treatment start. We then used the area under the receiver operator characteristic curve (AUC) to quantify the relative effects of individual covariates on TRM in a subset of 2,238 patients treated between 1986 and 2009 at M.D. Anderson Cancer Center. We found that multicomponent models were significantly more accurate in predicting TRM than individual covariates alone. A maximal model comprised of 17 covariates yielded an AUC of 0.83. Omission of covariates of lesser importance led to a “simplified” model that included performance status, age, platelet count, serum albumin, type of AML (secondary vs. primary), white blood cell count, percentage of blasts in the peripheral blood, and serum creatinine, yielding an AUC of 0.82.",
       "<br>",
       "<br>",
-      "<b>",
-      "Reference:",
-      "</b>",
+      "<b>Additional articles that have used or evaluated the TRM score include: </b>",
       "<br>",
-      "1. Walter RB, Othus M, Borthakur G, Ravandi F, Cortes JE, Pierce SA, Appelbaum FR, Kantarjian HM, Estey EH. Prediction of early death following induction therapy for newly diagnosed acute myeloid leukemia with pretreatment risk scores: a novel paradigm for treatment assignment.",
-      "<i>",
-      "J Clin Oncol.",
-      "</i>",
-      "2011;29(33):4417-4424. PMID: 21969499."
+      "1.", manuscript_one,
+      "<br>",
+      "2.", manuscript_two,
+      "<br>",
+      "3.", manuscript_three,
+      "<br>",
+      "4.", manuscript_four,
+      "<br>",
+      "5.", manuscript_five
+    )
+  )
+}
+
+# Print out background information for the JCO manuscript
+print_references <- function() {
+  HTML(
+    paste(
+      "<b>References</b>",
+      "<br>",
+      "1. Walter RB, Othus M, Borthakur G et al. Prediction of early death following induction therapy for newly diagnosed acute myeloid leukemia with pretreatment risk scores: a novel paradigm for treatment assignment. <i>J Clin Oncol.</i> 2011;29(33):4417-4424. PMID: 21969499.",
+      "<br>",
+      "2. Rodríguez-Arbolí E, Othus M, Orvain C et al. Second Allogeneic Hematopoietic Cell Transplantation for Relapsed Adult Acute Myeloid Leukemia: Outcomes and Prognostic Factors. <i>Transplantation and Cellular Therapy</i>. 2024;30(9):905.e1-905.e14. PMID: 38914227.",
+      "<br>",
+      "3. Zarling LC, Othus M, Sandmaier BM et al. Utility of the Treatment-Related Mortality (TRM) score to predict outcomes of adults with acute myeloid leukemia undergoing allogeneic hematopoietic cell transplantation. <i>Leukemia</i>. 2022;36:1563–1574. PMID: 35440690.",
+      "<br>",
+      "4. Palmieri R, Othus M, Halpern AB et al. Accuracy of SIE/SIES/GITMO Consensus Criteria for Unfitness to Predict Early Mortality After Intensive Chemotherapy in Adults With AML or Other High-Grade Myeloid Neoplasm. <i>J Clin Oncol.</i> 2020;38(35):4163-4174. PMID: 33030979.",
+      "<br>",
+      "5. Godwin CD, Othus M, Powell MA et al. Prediction of early death in adults with relapsed or refractory acute myeloid leukemia. <i>Leukemia & Lymphoma</i>. 2016; 57(10):2421–2424. PMID: 26754357.",
+      "<br>",
+      "6. Buckley S, Othus M, Estey E, Walter RB. The treatment-related mortality score is associated with non-fatal adverse events following intensive AML induction chemotherapy. <i>Blood Cancer Journal</i>. 2015; 5:e276. PMID: 25635529."
     )
   )
 }
@@ -182,5 +211,14 @@ get_trm_score <- function(input) {
   x_t = round(100/(1 + exp(-x)), digits = 4)
   
   x_t
+}
+
+# Print out introductory information for the top of the main calculator
+intro <- function() {
+  HTML(
+    paste(
+      "This calculator is useful for evaluating mortality risk of high intensity therapy for Acute Myeloid Leukemia (AML) patients. The statistical model underlying this calculator was trained on data from 3,365 adults of all ages administered intensive chemotherapy for newly diagnosed AML on SWOG trials or at M.D. Anderson Cancer Center between 1986 and 2009. For more information, click on the \"<b>Background</b>\" tab to the left."
+    )
+  )
 }
   
