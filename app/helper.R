@@ -143,7 +143,7 @@ print_contact_info <- function() {
   daslEmail <- a("analytics@fredhutch.org", href="mailto:analytics@fredhutch.org")
   
   HTML(
-    paste(
+    paste0(
       "This application was developed by the Fred Hutch ",
       daslWebsite,
       ". For questions or feedback regarding this application, email DaSL ",
@@ -162,7 +162,7 @@ print_jco_manuscript <- function() {
                      href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3221524/")
   
   HTML(
-    paste(
+    paste0(
       "<b>",
       trmManuscript,
       "</b>",
