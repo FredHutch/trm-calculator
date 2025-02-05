@@ -118,7 +118,7 @@ print_contact_info <- function() {
   email <- a("katrus@fredhutch.org", href="mailto:katrus@fredhutch.org")
   
   HTML(
-    paste(
+    paste0(
       "This application was developed in partnership with the Fred Hutch Data Science Lab (DaSL). To request new features or report any concerns, please file ",
       issue_tracker,
       " on GitHub. For direct inquiries or clinical questions related to the model, please send an email to Katie Russell at ",
@@ -149,7 +149,7 @@ print_jco_manuscript <- function() {
   manuscript_five <- a("The treatment-related mortality score is associated with non-fatal adverse events following intensive AML induction chemotherapy",
                      href="https://www.nature.com/articles/bcj201497")
   HTML(
-    paste(
+    paste0(
       "Below is the abstract for Walter et al.'s manuscript ",
       "<b>", trmManuscript, "</b>published in the <i> Journal of Clinical Oncology</i>. This publication provides an overview of the development of the presented model of TRM risk: ",
       "<br>",
@@ -176,7 +176,7 @@ print_jco_manuscript <- function() {
 # Print out background information for the JCO manuscript
 print_references <- function() {
   HTML(
-    paste(
+    paste0(
       "<b>References</b>",
       "<br>",
       "1. Walter RB, Othus M, Borthakur G et al. Prediction of early death following induction therapy for newly diagnosed acute myeloid leukemia with pretreatment risk scores: a novel paradigm for treatment assignment. <i>J Clin Oncol.</i> 2011;29(33):4417-4424. PMID: 21969499.",
@@ -216,7 +216,7 @@ get_trm_score <- function(input) {
 # Print out introductory information for the top of the main calculator
 intro <- function() {
   HTML(
-    paste(
+    paste0(
       "This calculator is useful for evaluating mortality risk of high intensity therapy for Acute Myeloid Leukemia (AML) patients. The statistical model underlying this calculator was trained on data from 3,365 adults of all ages administered intensive chemotherapy for newly diagnosed AML on SWOG trials or at M.D. Anderson Cancer Center between 1986 and 2009. For more information, click on the \"<b>Background</b>\" tab to the left."
     )
   )

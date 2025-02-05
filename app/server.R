@@ -86,7 +86,7 @@ server <- function(input, output, session) {
       return("No score calculated yet.")
     } 
     
-    paste("The TRM Score is: ", "<b>",score(),"</b>")
+    paste0("The TRM Score is: ", "<b>",score(),"</b>")
   })
   
   # Save TRM table to TRM table output
