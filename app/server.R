@@ -97,6 +97,15 @@ server <- function(input, output, session) {
     paste0("<font size=\"6\"><b>",score(),"</b></font>")
   })
   
+  # Save output score to TRM text output
+  output$trmScoreForTables <- renderText({
+    if (is.null(score())){
+      return("<font size=\"6\"> _________________ </font>")
+    } 
+    
+    paste0("<font size=\"6\"><b>",score(),"</b></font>")
+  })
+  
   
   # Save TRM table to TRM table output
   output$trmTable <- render_gt({
