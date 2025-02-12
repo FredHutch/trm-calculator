@@ -113,7 +113,7 @@ server <- function(input, output, session) {
     updateNumericInput(session, "platelets", value = NA)
     updateNumericInput(session, "albumin", value = NA)
     updateNumericInput(session, "age", value = NA)
-    updateCheckboxInput(session, "secondaryAML", value = FALSE)
+    updateRadioButtons(session, "secondaryAML", selected = 0)
     updateNumericInput(session, "wbc", value = NA)
     updateNumericInput(session, "blast", value = NA)
     updateNumericInput(session, "creatinine", value = NA)

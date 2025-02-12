@@ -172,7 +172,7 @@ get_trm_score <- function(input) {
   age = input$age
   platelets = input$platelets
   albumin = input$albumin
-  hasSecondaryAML = ifelse(input$secondaryAML == T,1,0)
+  hasSecondaryAML = as.numeric(input$secondaryAML)
   WBC = input$wbc # white blood count
   PBBP = input$blast # peripheral blood blast percentage
   creatinine = input$creatinine

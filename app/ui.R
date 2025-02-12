@@ -3,6 +3,8 @@ library(shiny)
 library(shinythemes)
 library(shinydashboard)
 library(gt)
+library(bslib)
+library(shinyBS)
 
 # Bring in images/CSS
 addResourcePath('assets', 'www')
@@ -86,9 +88,17 @@ ui <- dashboardPage(
               "albumin", "Albumin (g/dL)", 
               min = 0, value = NULL
             ),
-            checkboxInput(
-              "secondaryAML", strong("Secondary AML? (Check if yes)"), 
-              value = FALSE
+            radioButtons(
+              "secondaryAML",
+              "Type of Acute Myeloid Leukemia (AML) ",
+              choices = list("No AML or de novo AML" = 0, "Secondary AML" = 1),
+              selected = 0
+            ),
+            bsPopover(
+              "secondaryAML", 
+              "<b><i>Secondary AML</i></b> is defined as having a documented blood count abnormality for at least a month before the diagnosis of <b>(a)</b> AML after an antecedent hematologic dorder (AHD) or <b>(b)</b> AML after cytotoxic therapy", 
+              placement = "top", 
+              trigger = "hover"
             )
           ),
           
