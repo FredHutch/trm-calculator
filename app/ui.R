@@ -14,8 +14,6 @@ ui <- dashboardPage(
   # Title
   title="Fred Hutch TRM Calculator",
   
- 
-  
   # Header (FH icon with link to OCDO)
   dashboardHeader(
 
@@ -171,17 +169,12 @@ ui <- dashboardPage(
         ),
         
         fluidRow(
-          column(
-            12, 
-            box(
-              width = 12, 
-              
-              value_box(
-                title = "The TRM Score is: ",
-                value = htmlOutput(outputId = "trmScore"),
-                theme = value_box_theme(bg = "#1B365D")
-              )
-              
+          box(
+            width = 12, 
+            value_box(
+              title = "The TRM Score is: ",
+              value = htmlOutput(outputId = "trmScore"),
+              theme = value_box_theme(bg = "#1B365D")
             )
           )
         ),
@@ -199,20 +192,14 @@ ui <- dashboardPage(
         tabName = "tables",
         
         fluidRow(
-          column(
-            12, 
-            box(
-              width = 12, 
-              
-              value_box(
-                title = "The TRM Score is: ",
-                value = htmlOutput(outputId = "trmScoreForTables"),
-                theme = value_box_theme(bg = "#1B365D")
-              )
-              
+          box(
+            width = 12, 
+            value_box(
+              title = "The TRM Score is: ",
+              value = htmlOutput(outputId = "trmScoreForTables"),
+              theme = value_box_theme(bg = "#1B365D")
             )
           ),
-          
           column(
             12, 
             gt_output(outputId = "trmTable")
