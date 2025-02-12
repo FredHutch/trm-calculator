@@ -57,6 +57,19 @@ ui <- dashboardPage(
         overflow: hidden;
         color: white;
       }
+      .checkbox { /* checkbox is a div class*/
+        line-height: 5px;
+        margin-bottom: 40px; /*set the margin, so boxes dont overlap*/
+      }
+      input[type=\'radio\']{
+        width: 20px; /*Desired width*/
+        height: 20px; /*Desired height*/
+        line-height: 20px; 
+      }
+      span { 
+          margin-left: 0px;  /*set the margin, so boxes dont overlap labels*/
+          line-height: 30px; 
+      }
     '))),
     
     tags$script(HTML('
