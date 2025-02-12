@@ -131,7 +131,7 @@ server <- function(input, output, session) {
     updateNumericInput(session, "platelets", value = NA)
     updateNumericInput(session, "albumin", value = NA)
     updateNumericInput(session, "age", value = NA)
-    updateCheckboxInput(session, "secondaryAML", value = FALSE)
+    updateRadioButtons(session, "secondaryAML", selected = 0)
     updateNumericInput(session, "wbc", value = NA)
     updateNumericInput(session, "blast", value = NA)
     updateNumericInput(session, "creatinine", value = NA)
@@ -157,4 +157,8 @@ server <- function(input, output, session) {
     print_jco_manuscript()
   })
   
+  # Save background info to background information output
+  output$intro <- renderText({
+    intro()
+  })
 }

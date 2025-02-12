@@ -4,6 +4,7 @@ library(shinythemes)
 library(shinydashboard)
 library(gt)
 library(bslib)
+library(shinyBS)
 
 # Bring in images/CSS
 addResourcePath('assets', 'www')
@@ -16,11 +17,12 @@ ui <- dashboardPage(
   # Header (FH icon with link to OCDO)
   dashboardHeader(
     title = tags$a(
-      href='https://ocdo.fredhutch.org',
+      href='https://www.fredhutch.org/en.html',
       tags$img(
         src='/assets/fhLogo.png',
         height='35px',
-        width='155px'
+        width='155px',
+        alt='Fred Hutch logo'
       )
     )
   ),
@@ -41,13 +43,14 @@ ui <- dashboardPage(
       menuItem(
         "Related Literature", 
         tabName = "background", 
-        icon = icon("book")
+        icon = icon("book-open")
       )
     )
   ),
   
   # Dashboard body - themes, aesthetics, inputs, and outputs
   dashboardBody(
+    tags$html(lang="en"),
     includeCSS("www/hutch_theme.css"),
     tags$head(tags$title("Fred Hutch TRM Calculator")),
     
@@ -60,10 +63,27 @@ ui <- dashboardPage(
         padding: 0 15px;
         overflow: hidden;
         color: white;
-      }'
-    ))),
-    
-    tags$head(tags$style(HTML('.bslib-value-box .value-box-title {font-size:18px;}'))),
+      }
+      .bslib-value-box .value-box-title {
+        font-size:18px;
+      }
+      a {
+        color: #346F93
+      }
+      .checkbox {
+        line-height: 5px;
+        margin-bottom: 40px;
+      }
+      input[type=\'radio\']{
+        width: 20px; /*Desired width*/
+        height: 20px; /*Desired height*/
+        line-height: 20px; 
+      }
+      span { 
+          margin-left: 0px;
+          line-height: 30px; 
+      }
+    '))),
     
     tags$script(HTML('
       $(document).ready(function() {
@@ -74,6 +94,15 @@ ui <- dashboardPage(
     tabItems(
       tabItem(
         tabName = "trm",
+        
+        fluidRow(
+          box(
+            width = 12, 
+            uiOutput(outputId = "intro")
+          )
+        ),
+        
+        
         fluidRow(
           
           box(
@@ -94,9 +123,17 @@ ui <- dashboardPage(
               "albumin", "Albumin (g/dL)", 
               min = 0, value = NULL
             ),
-            checkboxInput(
-              "secondaryAML", strong("Secondary AML? (Check if yes)"), 
-              value = FALSE
+            radioButtons(
+              "secondaryAML",
+              "Type of Acute Myeloid Leukemia (AML) ",
+              choices = list("No AML or de novo AML" = 0, "Secondary AML" = 1),
+              selected = 0
+            ),
+            bsPopover(
+              "secondaryAML", 
+              "<b><i>Secondary AML</i></b> is defined as having a documented blood count abnormality for at least a month before the diagnosis of <b>(a)</b> AML after an antecedent hematologic dorder (AHD) or <b>(b)</b> AML after cytotoxic therapy", 
+              placement = "top", 
+              trigger = "hover"
             )
           ),
           
@@ -142,12 +179,9 @@ ui <- dashboardPage(
         ),
         
         fluidRow(
-          column(
-            12, 
-            box(
-              width = 12, 
-              uiOutput(outputId = "contactInfo")
-            )
+          box(
+            width = 12, 
+            uiOutput(outputId = "contactInfo")
           )
         )
       ),
