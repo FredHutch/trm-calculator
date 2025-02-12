@@ -164,13 +164,11 @@ ui <- dashboardPage(
             actionButton(
               inputId = "reset", 
               label = strong("Reset")
-            )
-          )
-        ),
-        
-        fluidRow(
-          box(
-            width = 12, 
+            ),
+            
+            br(),
+            br(),
+            
             value_box(
               title = "The TRM Score is: ",
               value = htmlOutput(outputId = "trmScore"),
@@ -178,6 +176,7 @@ ui <- dashboardPage(
             )
           )
         ),
+      
         
         fluidRow(
           box(
@@ -200,6 +199,7 @@ ui <- dashboardPage(
               theme = value_box_theme(bg = "#1B365D")
             )
           ),
+          
           column(
             12, 
             gt_output(outputId = "trmTable")
