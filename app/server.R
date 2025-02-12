@@ -23,9 +23,17 @@ server <- function(input, output, session) {
   # Initialize reactive values for output score and tables
   score <- reactiveVal(NULL)
   highlightedRow <- reactiveVal(NULL)
-  trm_table_data <- reactiveVal(NULL)
   trm_under_table_data <- reactiveVal(NULL)
   trm_over_table_data <- reactiveVal(NULL)
+  trm_table_data <- reactiveVal(NULL)
+  
+  # Set the baseline TRM table to be the simple model w/out age and no highlight
+  trm_table_data(
+    make_gt_from_table_no_highlight(
+      trmData, 
+      "Simplified Model without Age"
+    )
+  )
   
   # Click the 'calculate' button to trigger output
   observeEvent(input$calculateNow, {
@@ -83,11 +91,21 @@ server <- function(input, output, session) {
   # Save output score to TRM text output
   output$trmScore <- renderText({
     if (is.null(score())){
-      return("No score calculated yet.")
+      return("<font size=\"6\"> _________________ </font>")
     } 
     
-    paste0("The TRM Score is: ", "<b>",score(),"</b>")
+    paste0("<font size=\"6\"><b>",score(),"</b></font>")
   })
+  
+  # Save output score to TRM text output
+  output$trmScoreForTables <- renderText({
+    if (is.null(score())){
+      return("<font size=\"6\"> _________________ </font>")
+    } 
+    
+    paste0("<font size=\"6\"><b>",score(),"</b></font>")
+  })
+  
   
   # Save TRM table to TRM table output
   output$trmTable <- render_gt({
@@ -119,7 +137,12 @@ server <- function(input, output, session) {
     updateNumericInput(session, "creatinine", value = NA)
     
     score(NULL)
-    trm_table_data(NULL)
+    trm_table_data(
+      make_gt_from_table_no_highlight(
+        trmData, 
+        "Simplified Model without Age"
+      )
+    )
     trm_over_table_data(NULL)
     trm_under_table_data(NULL)
   })
