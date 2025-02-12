@@ -37,7 +37,7 @@ ui <- dashboardPage(
       menuItem(
         "Background", 
         tabName = "background", 
-        icon = icon("book")
+        icon = icon("book-open")
       )
     )
   ),
@@ -68,6 +68,15 @@ ui <- dashboardPage(
     tabItems(
       tabItem(
         tabName = "trm",
+        
+        fluidRow(
+          box(
+            width = 12, 
+            uiOutput(outputId = "intro")
+          )
+        ),
+        
+        
         fluidRow(
           
           box(
@@ -146,12 +155,9 @@ ui <- dashboardPage(
         ),
         
         fluidRow(
-          column(
-            12, 
-            box(
-              width = 12, 
-              uiOutput(outputId = "contactInfo")
-            )
+          box(
+            width = 12, 
+            uiOutput(outputId = "contactInfo")
           )
         )
       ),

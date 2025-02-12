@@ -134,4 +134,8 @@ server <- function(input, output, session) {
     print_jco_manuscript()
   })
   
+  # Save background info to background information output
+  output$intro <- renderText({
+    intro()
+  })
 }
