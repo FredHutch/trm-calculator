@@ -43,6 +43,7 @@ ui <- dashboardPage(
   
   # Dashboard body - themes, aesthetics, inputs, and outputs
   dashboardBody(
+    tags$html(lang="en"),
     includeCSS("www/hutch_theme.css"),
     tags$head(tags$title("Fred Hutch TRM Calculator")),
     
