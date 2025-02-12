@@ -34,6 +34,18 @@
     border: 2px solid #ecf0f5;
     border-radius: 5px;
     margin: 5px;
+    margin-right: -5px;
+}
+
+/* active selected tab in the sidebarmenu */
+.skin-blue .main-sidebar .sidebar .sidebar-menu .active a:hover{
+    background-color: #ecf0f5;
+    color: #1B365D;
+    font-weight: bold;
+    border: 2px solid #ecf0f5;
+    border-radius: 5px;
+    margin: 5px;
+    margin-right: -5px;
 }
 
 /* other links in the sidebarmenu */
