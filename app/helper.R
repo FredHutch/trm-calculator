@@ -114,18 +114,15 @@ make_gt_from_table <- function(current_table, row_to_highlight, table_title) {
 
 # Print out contact information for the bottom of the app
 print_contact_info <- function() {
-  daslWebsite <- a("Data Science Lab (DaSL)", href="https://hutchdatascience.org")
-  daslTA <- a("Translational Analytics", href="https://hutchdatascience.org/tr-analytics/")
-  daslEmail <- a("analytics@fredhutch.org", href="mailto:analytics@fredhutch.org")
+  issue_tracker <- a("a new issue", href="https://github.com/FredHutch/trm-calculator/issues/new/")
+  email <- a("katrus@fredhutch.org", href="mailto:katrus@fredhutch.org")
   
   HTML(
-    paste(
-      "This application was developed by the Fred Hutch ",
-      daslWebsite,
-      ". For questions or feedback regarding this application, email DaSL ",
-      daslTA,
-      " at ",
-      daslEmail,
+    paste0(
+      "This application was developed in partnership with the Fred Hutch Data Science Lab (DaSL). To request new features or report any concerns, please file ",
+      issue_tracker,
+      " on GitHub. For direct inquiries or clinical questions related to the model, please send an email to Katie Russell at ",
+      email,
       "."
     )
   )
@@ -135,36 +132,46 @@ print_contact_info <- function() {
 # Print out background information for the JCO manuscript
 print_jco_manuscript <- function() {
   trmManuscript <- a("Prediction of Treatment-Related Mortality after Induction Therapy for Newly Diagnosed Acute Myeloid Leukemia",
-                     href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3221524/")
+                     href="https://doi.org/10.1200/JCO.2011.35.7525")
   
+  manuscript_one <- a("Second Allogeneic Hematopoietic Cell Transplantation for Relapsed Adult Acute Myeloid Leukemia: Outcomes and Prognostic Factors",
+                     href="https://doi.org/10.1016/j.jtct.2024.06.019")
+  
+  manuscript_two <- a("Utility of the Treatment-Related Mortality (TRM) score to predict outcomes of adults with acute myeloid leukemia undergoing allogeneic hematopoietic cell transplantation",
+                     href="https://doi.org/10.1038/s41375-022-01574-5")
+  
+  manuscript_three <- a("Accuracy of SIE/SIES/GITMO Consensus Criteria for Unfitness to Predict Early Mortality After Intensive Chemotherapy in Adults With AML or Other High-Grade Myeloid Neoplasm",
+                     href="https://doi.org/10.1200/JCO.20.01392")
+  
+  manuscript_four <- a("Prediction of early death in adults with relapsed or refractory acute myeloid leukemia",
+                     href="https://doi.org/10.3109/10428194.2015.1135436")
+  
+  manuscript_five <- a("The treatment-related mortality score is associated with non-fatal adverse events following intensive AML induction chemotherapy",
+                     href="https://doi.org/10.1038/bcj.2014.97")
   HTML(
-    paste(
-      "<b>",
-      trmManuscript,
-      "</b>",
+    paste0(
+      "The development of the treatment-related mortality (TRM) risk model is outlined in the manuscript ",
+      "<b>", trmManuscript, "</b> (Walter RB, et al.). ",
       "<br>",
       "<br>",
-      "<i>",
-      "Roland B. Walter, Megan Othus, Gautam Borthakur, Farhad Ravandi, Jorge E. Cortes, Sherry A. Pierce, Frederick R. Appelbaum, Hagop A. Kantarjian, and Elihu H. Estey",
-      "</i>",
-      "<br>",
-      "<br>",
+      "<b>Abstract</b><br>",
       "It is well known that the risk treatment-related mortality (TRM) varies considerably between individual patients with acute myeloid leukemia (AML). Numerous factors have been identified that are individually associated with this risk, including age and covariates that may serve as surrogates for the biological (rather than chronological) age, such as performance status, organ function parameters (e.g. bilirubin, fibrinogen, albumin, creatinine), degree of cytopenias, and disease characteristics. Using data from 3,365 adults of all ages administered intensive chemotherapy for newly diagnosed AML on SWOG trials or at M.D. Anderson Cancer Center between 1986 and 2009, we defined TRM as death within 28 days from initiation of chemotherapy based on the observation that the risk of death declined once 4 weeks had elapsed from treatment start. We then used the area under the receiver operator characteristic curve (AUC) to quantify the relative effects of individual covariates on TRM in a subset of 2,238 patients treated between 1986 and 2009 at M.D. Anderson Cancer Center. We found that multicomponent models were significantly more accurate in predicting TRM than individual covariates alone. A maximal model comprised of 17 covariates yielded an AUC of 0.83. Omission of covariates of lesser importance led to a “simplified” model that included performance status, age, platelet count, serum albumin, type of AML (secondary vs. primary), white blood cell count, percentage of blasts in the peripheral blood, and serum creatinine, yielding an AUC of 0.82.",
       "<br>",
       "<br>",
-      "<b>",
-      "Reference:",
-      "</b>",
+      "<b>Additional articles that have used or evaluated the TRM score include: </b>",
       "<br>",
-      "1. Walter RB, Othus M, Borthakur G, Ravandi F, Cortes JE, Pierce SA, Appelbaum FR, Kantarjian HM, Estey EH. Prediction of early death following induction therapy for newly diagnosed acute myeloid leukemia with pretreatment risk scores: a novel paradigm for treatment assignment.",
-      "<i>",
-      "J Clin Oncol.",
-      "</i>",
-      "2011;29(33):4417-4424. PMID: 21969499."
+      "1. ", manuscript_one,
+      "<br>",
+      "2. ", manuscript_two,
+      "<br>",
+      "3. ", manuscript_three,
+      "<br>",
+      "4. ", manuscript_four,
+      "<br>",
+      "5. ", manuscript_five
     )
   )
 }
-
 
 # Calculate the TRM score based on user input
 get_trm_score <- function(input) {
@@ -172,7 +179,7 @@ get_trm_score <- function(input) {
   age = input$age
   platelets = input$platelets
   albumin = input$albumin
-  hasSecondaryAML = ifelse(input$secondaryAML == T,1,0)
+  hasSecondaryAML = as.numeric(input$secondaryAML)
   WBC = input$wbc # white blood count
   PBBP = input$blast # peripheral blood blast percentage
   creatinine = input$creatinine
@@ -182,5 +189,14 @@ get_trm_score <- function(input) {
   x_t = round(100/(1 + exp(-x)), digits = 4)
   
   x_t
+}
+
+# Print out introductory information for the top of the main calculator
+intro <- function() {
+  HTML(
+    paste0(
+      "This calculator is useful for evaluating mortality risk of high intensity therapy for Acute Myeloid Leukemia (AML) patients. The statistical model underlying this calculator was trained on data from 3,365 adults of all ages administered intensive chemotherapy for newly diagnosed AML on SWOG trials or at M.D. Anderson Cancer Center between 1986 and 2009. For more information, click on the \"<b>Background</b>\" tab to the left."
+    )
+  )
 }
   
