@@ -17,11 +17,12 @@ ui <- dashboardPage(
   # Header (FH icon with link to OCDO)
   dashboardHeader(
     title = tags$a(
-      href='https://ocdo.fredhutch.org',
+      href='https://www.fredhutch.org/en.html',
       tags$img(
         src='/assets/fhLogo.png',
         height='35px',
-        width='155px'
+        width='155px',
+        alt='Fred Hutch logo'
       )
     )
   ),
@@ -44,6 +45,7 @@ ui <- dashboardPage(
   
   # Dashboard body - themes, aesthetics, inputs, and outputs
   dashboardBody(
+    tags$html(lang="en"),
     includeCSS("www/hutch_theme.css"),
     tags$head(tags$title("Fred Hutch TRM Calculator")),
     
@@ -56,6 +58,9 @@ ui <- dashboardPage(
         padding: 0 15px;
         overflow: hidden;
         color: white;
+      }
+      a {
+        color: #346F93
       }
       .checkbox { /* checkbox is a div class*/
         line-height: 5px;
