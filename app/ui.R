@@ -15,11 +15,12 @@ ui <- dashboardPage(
   # Header (FH icon with link to OCDO)
   dashboardHeader(
     title = tags$a(
-      href='https://ocdo.fredhutch.org',
+      href='https://www.fredhutch.org/en.html',
       tags$img(
         src='/assets/fhLogo.png',
         height='35px',
-        width='155px'
+        width='155px',
+        alt='Fred Hutch logo'
       )
     )
   ),
