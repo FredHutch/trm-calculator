@@ -94,7 +94,7 @@ server <- function(input, output, session) {
       return("<font size=\"6\"> _________________ </font>")
     } 
     
-    paste0("<font size=\"6\"><b><mark>",score(),"</mark></b></font>")
+    paste0("<font size=\"6\"><b>",score(),"</b></font>")
   })
   
   
