@@ -57,6 +57,9 @@ ui <- dashboardPage(
         overflow: hidden;
         color: white;
       }
+      a {
+        color: #346F93
+      }
     '))),
     
     tags$script(HTML('
