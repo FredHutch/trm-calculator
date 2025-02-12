@@ -14,8 +14,12 @@ ui <- dashboardPage(
   # Title
   title="Fred Hutch TRM Calculator",
   
+ 
+  
   # Header (FH icon with link to OCDO)
   dashboardHeader(
+
+    #other header stuff
     title = tags$a(
       href='https://www.fredhutch.org/en.html',
       tags$img(
@@ -85,11 +89,15 @@ ui <- dashboardPage(
       }
     '))),
     
-    tags$script(HTML('
-      $(document).ready(function() {
-        $("header").find("nav").append(\'<span class="myClass"> Treatment-Related Mortality (TRM) Calculator </span>\');
-      })
-    ')),
+    tags$head(includeHTML("analytics.html")),
+    
+    tags$script(
+      HTML('
+        $(document).ready(function() {
+          $("header").find("nav").append(\'<span class="myClass"> Treatment-Related Mortality (TRM) Calculator </span>\');
+        })
+      ')
+    ),
     
     tabItems(
       tabItem(
