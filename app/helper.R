@@ -132,26 +132,26 @@ print_contact_info <- function() {
 # Print out background information for the JCO manuscript
 print_jco_manuscript <- function() {
   trmManuscript <- a("Prediction of Treatment-Related Mortality after Induction Therapy for Newly Diagnosed Acute Myeloid Leukemia",
-                     href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3221524/")
+                     href="https://doi.org/10.1200/JCO.2011.35.7525")
   
   manuscript_one <- a("Second Allogeneic Hematopoietic Cell Transplantation for Relapsed Adult Acute Myeloid Leukemia: Outcomes and Prognostic Factors",
-                     href="https://www.sciencedirect.com/science/article/pii/S2666636724004810")
+                     href="https://doi.org/10.1016/j.jtct.2024.06.019")
   
   manuscript_two <- a("Utility of the Treatment-Related Mortality (TRM) score to predict outcomes of adults with acute myeloid leukemia undergoing allogeneic hematopoietic cell transplantation",
-                     href="https://www.nature.com/articles/s41375-022-01574-5")
+                     href="https://doi.org/10.1038/s41375-022-01574-5")
   
   manuscript_three <- a("Accuracy of SIE/SIES/GITMO Consensus Criteria for Unfitness to Predict Early Mortality After Intensive Chemotherapy in Adults With AML or Other High-Grade Myeloid Neoplasm",
-                     href="https://ascopubs.org/doi/10.1200/JCO.20.01392?url_ver=Z39.88-2003&rfr_id=ori:rid:crossref.org&rfr_dat=cr_pub%20%200pubmed")
+                     href="https://doi.org/10.1200/JCO.20.01392")
   
   manuscript_four <- a("Prediction of early death in adults with relapsed or refractory acute myeloid leukemia",
-                     href="https://www.tandfonline.com/doi/10.3109/10428194.2015.1135436?url_ver=Z39.88-2003&rfr_id=ori:rid:crossref.org&rfr_dat=cr_pub%20%200pubmed")
+                     href="https://doi.org/10.3109/10428194.2015.1135436")
   
   manuscript_five <- a("The treatment-related mortality score is associated with non-fatal adverse events following intensive AML induction chemotherapy",
-                     href="https://www.nature.com/articles/bcj201497")
+                     href="https://doi.org/10.1038/bcj.2014.97")
   HTML(
     paste0(
-      "Below is the abstract for Walter et al.'s manuscript ",
-      "<b>", trmManuscript, "</b>published in the <i> Journal of Clinical Oncology</i>. This publication provides an overview of the development of the presented model of TRM risk: ",
+      "The development of the treatment-related mortality (TRM) risk model is outlined in the manuscript ",
+      "<b>", trmManuscript, "</b> (Walter RB, et al.). ",
       "<br>",
       "<br>",
       "<b>Abstract</b><br>",
@@ -160,40 +160,18 @@ print_jco_manuscript <- function() {
       "<br>",
       "<b>Additional articles that have used or evaluated the TRM score include: </b>",
       "<br>",
-      "1.", manuscript_one,
+      "1. ", manuscript_one,
       "<br>",
-      "2.", manuscript_two,
+      "2. ", manuscript_two,
       "<br>",
-      "3.", manuscript_three,
+      "3. ", manuscript_three,
       "<br>",
-      "4.", manuscript_four,
+      "4. ", manuscript_four,
       "<br>",
-      "5.", manuscript_five
+      "5. ", manuscript_five
     )
   )
 }
-
-# Print out background information for the JCO manuscript
-print_references <- function() {
-  HTML(
-    paste0(
-      "<b>References</b>",
-      "<br>",
-      "1. Walter RB, Othus M, Borthakur G et al. Prediction of early death following induction therapy for newly diagnosed acute myeloid leukemia with pretreatment risk scores: a novel paradigm for treatment assignment. <i>J Clin Oncol.</i> 2011;29(33):4417-4424. PMID: 21969499.",
-      "<br>",
-      "2. Rodríguez-Arbolí E, Othus M, Orvain C et al. Second Allogeneic Hematopoietic Cell Transplantation for Relapsed Adult Acute Myeloid Leukemia: Outcomes and Prognostic Factors. <i>Transplantation and Cellular Therapy</i>. 2024;30(9):905.e1-905.e14. PMID: 38914227.",
-      "<br>",
-      "3. Zarling LC, Othus M, Sandmaier BM et al. Utility of the Treatment-Related Mortality (TRM) score to predict outcomes of adults with acute myeloid leukemia undergoing allogeneic hematopoietic cell transplantation. <i>Leukemia</i>. 2022;36:1563–1574. PMID: 35440690.",
-      "<br>",
-      "4. Palmieri R, Othus M, Halpern AB et al. Accuracy of SIE/SIES/GITMO Consensus Criteria for Unfitness to Predict Early Mortality After Intensive Chemotherapy in Adults With AML or Other High-Grade Myeloid Neoplasm. <i>J Clin Oncol.</i> 2020;38(35):4163-4174. PMID: 33030979.",
-      "<br>",
-      "5. Godwin CD, Othus M, Powell MA et al. Prediction of early death in adults with relapsed or refractory acute myeloid leukemia. <i>Leukemia & Lymphoma</i>. 2016; 57(10):2421–2424. PMID: 26754357.",
-      "<br>",
-      "6. Buckley S, Othus M, Estey E, Walter RB. The treatment-related mortality score is associated with non-fatal adverse events following intensive AML induction chemotherapy. <i>Blood Cancer Journal</i>. 2015; 5:e276. PMID: 25635529."
-    )
-  )
-}
-
 
 # Calculate the TRM score based on user input
 get_trm_score <- function(input) {

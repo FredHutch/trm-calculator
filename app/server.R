@@ -138,9 +138,4 @@ server <- function(input, output, session) {
   output$intro <- renderText({
     intro()
   })
-  
-  # Save background info to background information output
-  output$references <- renderText({
-    print_references()
-  })
 }

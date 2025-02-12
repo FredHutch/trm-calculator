@@ -36,11 +36,6 @@ ui <- dashboardPage(
         "Background", 
         tabName = "background", 
         icon = icon("book-open")
-      ),
-      menuItem(
-        "References", 
-        tabName = "references", 
-        icon = icon("book")
       )
     )
   ),
@@ -162,14 +157,6 @@ ui <- dashboardPage(
         box(
           width = 12, 
           uiOutput(outputId = "background")
-        )
-      ),
-      
-      tabItem(
-        tabName = "references",
-        box(
-          width = 12, 
-          uiOutput(outputId = "references")
         )
       )
     )
