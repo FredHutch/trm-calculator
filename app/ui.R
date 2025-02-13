@@ -172,7 +172,7 @@ ui <- dashboardPage(
             value_box(
               title = "The TRM Score is: ",
               value = htmlOutput(outputId = "trmScore"),
-              theme = value_box_theme(bg = "#1B365D")
+              theme = bslib:::value_box_theme(bg = "#1B365D")
             )
           )
         ),
@@ -196,7 +196,7 @@ ui <- dashboardPage(
             value_box(
               title = "The TRM Score is: ",
               value = htmlOutput(outputId = "trmScoreForTables"),
-              theme = value_box_theme(bg = "#1B365D")
+              theme = bslib:::value_box_theme(bg = "#1B365D")
             )
           ),
           
