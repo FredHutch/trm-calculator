@@ -19,7 +19,7 @@ stages:
 build:
   stage: build
   script:
-    - docker build -t sc-registry.fredhutch.org/trm-calculator:test .
+    - docker build --no-cache -t sc-registry.fredhutch.org/trm-calculator:test .
     - docker push sc-registry.fredhutch.org/trm-calculator:test
 
 test:
