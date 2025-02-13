@@ -28,6 +28,7 @@ test:
     - name: sc-registry.fredhutch.org/trm-calculator:test
       alias: trm-calculator
   script:
+    - echo "we are in the ${CI_COMMIT_BRANCH} branch"
     - sleep 15 && curl -sI  http://trm-calculator:3838  |head -1|grep -q "200 OK"
 
 deploy:
