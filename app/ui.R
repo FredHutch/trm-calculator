@@ -134,12 +134,6 @@ ui <- dashboardPage(
               "Type of Acute Myeloid Leukemia (AML) ",
               choices = list("No AML or de novo AML" = 0, "Secondary AML" = 1),
               selected = 0
-            ),
-            bsPopover(
-              "secondaryAML", 
-              "<b><i>Secondary AML</i></b> is defined as having a documented blood count abnormality for at least a month before the diagnosis of <b>(a)</b> AML after an antecedent hematologic dorder (AHD) or <b>(b)</b> AML after cytotoxic therapy", 
-              placement = "top", 
-              trigger = "hover"
             )
           ),
           
