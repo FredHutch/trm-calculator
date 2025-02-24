@@ -18,6 +18,8 @@ shinydashboard;
 shinyvalidate; 
 gt; 
 gtExtras;
+bslib;
+shinyBS;
 ```
 
 ### Contact
