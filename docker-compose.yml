@@ -9,8 +9,8 @@ services:
         condition: on-failure
       labels:
         - "traefik.enable=true"
-        - "traefik.http.routers.trm-calculator.rule=Host(`trm.fredhutch.org`)"
-        - "traefik.http.routers.trm-calculator-secured.rule=Host(`trm.fredhutch.org`)"
+        - "traefik.http.routers.trm-calculator.rule=Host(`trmcalculator.fredhutch.org`)"
+        - "traefik.http.routers.trm-calculator-secured.rule=Host(`trmcalculator.fredhutch.org`)"
         - "traefik.http.routers.trm-calculator.entrypoints=web,web-secured"
         - "traefik.http.services.trm-calculator.loadbalancer.server.port=3838" # it seems you always need to give traefik a port so it 'notices' the service
         - "traefik.http.routers.trm-calculator.tls=true"
